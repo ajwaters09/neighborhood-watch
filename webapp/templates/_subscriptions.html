@@ -1,0 +1,98 @@
+<div id="subscriptions-panel" class="my-areas"{% if oob %} hx-swap-oob="true"{% endif %}>
+  {% set triggered_ids = triggered_alerts|map(attribute="rule_id")|list %}
+  {% if triggered_alerts %}
+  <div class="callout warning">
+    <strong>{{ triggered_alerts|length }} new alert{{ 's' if triggered_alerts|length != 1 }}</strong>
+    <ul class="alert-rows">
+    {% for t in triggered_alerts %}
+      {% set area_link %}<a href="#" onclick="NW.jumpToArea({{ t.community_area }}); return false;">{{ area_names.get(t.community_area, '?') }}</a>{% endset %}
+      <li>
+        {% if t.kind == "trend" %}
+        {# A followed trend: an update on every pull, with how it moved since the last one. #}
+        {% set dir = {"climbing": "still climbing", "steady": "holding steady", "easing": "easing"}.get(t.direction) %}
+        <span><span class="alert-kind">Trend update</span> {{ area_link }}: {{ t.metric|metric_label }} {{ "%+.1f"|format(t.pct_change_vs_prior_window) }}% over the last {{ t.window_days }} days vs. the {{ t.window_days }} before{% if dir %}, <strong class="trend-{{ t.direction }}">{{ dir }}</strong> (it was {{ "%+.1f"|format(t.last_pct) }}% at your last update){% endif %}.</span>
+        {% else %}
+        <span>{{ area_link }}: {{ t.metric|metric_label }} {{ "%+.1f"|format(t.pct_change_vs_prior_window) }}% over the last {{ t.window_days }} days (your threshold: {{ t.threshold_pct|round(1) }}%)</span>
+        {% endif %}
+        {# Clearing keeps the rule; it goes quiet until the next data pull (data_access.clear_alert). #}
+        <button type="button" class="link-btn" hx-post="/alert-rules/{{ t.rule_id }}/clear" hx-target="#subscriptions-panel" hx-swap="outerHTML"
+                title="{{ 'Dismiss this update. The next one comes with the next data pull.' if t.kind == 'trend' else 'Dismiss this alert. The rule stays, and flags again only if the next data pull is still over your threshold.' }}">Clear</button>
+      </li>
+    {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  <div class="two-col">
+    <section class="card">
+      <h2>Subscribed areas</h2>
+      <form class="inline-form" hx-post="/subscribe" hx-swap="none" hx-disabled-elt="find button" hx-vals='js:{active_area: NW.activeArea}'>
+        <select name="community_area" aria-label="Area to subscribe to">
+          {% for num, name in area_options %}<option value="{{ num }}">{{ name }}</option>{% endfor %}
+        </select>
+        <button type="submit">Subscribe</button>
+      </form>
+      {% if subs_error %}
+        <p class="form-error">{{ subs_error }}</p>
+      {% elif not subscriptions %}
+        <p class="muted empty">You haven't subscribed to any areas yet. Pick one above, or click an area on the map and hit <em>Subscribe</em>.</p>
+      {% else %}
+        <ul class="area-list">
+        {% for s in subscriptions %}
+          {% set name = area_names.get(s.community_area, '?') %}
+          {# Unsubscribe takes two clicks: the first swaps in Confirm / Cancel. #}
+          <li x-data="{ confirming: false }">
+            <button type="button" class="area-link" onclick="NW.jumpToArea({{ s.community_area }})">
+              <span class="area-num">{{ s.community_area }}</span>
+              <span class="area-name">{{ name }}</span>
+              <span class="muted small">since {{ s.created_at.strftime('%b %-d, %Y') if s.created_at.strftime is defined else s.created_at }}</span>
+              <span class="chev" aria-hidden="true">›</span>
+            </button>
+            <div class="unsub">
+              <button type="button" class="link-btn danger" x-show="!confirming" @click="confirming = true" aria-label="Unsubscribe from {{ name }}">Unsubscribe</button>
+              <button type="button" class="unsub-confirm" x-show="confirming" x-cloak
+                      hx-delete="/subscriptions/{{ s.community_area }}" hx-swap="none" hx-vals='js:{active_area: NW.activeArea}'>Confirm</button>
+              <button type="button" class="link-btn" x-show="confirming" x-cloak @click="confirming = false">Cancel</button>
+            </div>
+          </li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    </section>
+
+    <section class="card">
+      <h2>Alert rules</h2>
+      <p class="caption">A rule you add here flags when a metric's last 30 days are up by at least your threshold compared with the 30 days before. <em>Alert me on this trend</em>, under <em>Signals to watch</em>, follows a trend instead: you get an update every time new data comes in, whether it's still climbing, holding steady, or easing. Both are checked each time new data comes in (nightly), so a new one waits for the next pull, and a cleared alert stays quiet until then. Alerts only show in this app; there's no email or text.</p>
+      <form class="rule-form" hx-post="/alert-rules" hx-target="#subscriptions-panel" hx-swap="outerHTML" hx-disabled-elt="find button">
+        <select name="community_area" aria-label="Area">{% for num, name in area_options %}<option value="{{ num }}">{{ name }}</option>{% endfor %}</select>
+        <select name="metric" aria-label="Metric">
+          <optgroup label="Crime">{% for m in crime_metrics %}<option value="{{ m }}">{{ m|metric_label }}</option>{% endfor %}</optgroup>
+          <optgroup label="311">{% for m in sr_metrics %}<option value="{{ m }}">{{ m|metric_label }}</option>{% endfor %}</optgroup>
+        </select>
+        <label class="threshold">≥ <input type="number" name="threshold_pct" value="20" step="5" aria-label="Threshold percent"> %</label>
+        <button type="submit">Add rule</button>
+      </form>
+      {% if rules_error %}
+        <p class="form-error">{{ rules_error }}</p>
+      {% elif not alert_rules %}
+        <p class="muted empty">No alert rules yet.</p>
+      {% else %}
+        <ul class="rule-list">
+        {% for r in alert_rules %}
+          <li>
+            <div><strong>{{ area_names.get(r.community_area, '?') }}</strong>
+              {% if r.kind == "trend" %}
+              <div class="muted small">{{ r.metric|metric_label }} · an update on every data pull
+                · {% if r.rule_id in triggered_ids %}<span class="rule-status new">Update ready</span>{% else %}<span class="rule-status">Waiting for the next pull</span>{% endif %}</div></div>
+              {% else %}
+              <div class="muted small">{{ r.metric|metric_label }} up {{ r.threshold_pct|round(1) }}% or more
+                · {% if r.rule_id in triggered_ids %}<span class="rule-status on">Triggered</span>{% else %}<span class="rule-status">Watching the next pull</span>{% endif %}</div></div>
+              {% endif %}
+            <button type="button" class="link-btn danger" hx-delete="/alert-rules/{{ r.rule_id }}" hx-target="#subscriptions-panel" hx-swap="outerHTML">Remove</button>
+          </li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    </section>
+  </div>
+</div>

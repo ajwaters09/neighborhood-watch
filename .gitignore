@@ -1,0 +1,14 @@
+.env
+Chicago Crimes Dataset API key and secre.md
+__pycache__/
+*.pyc
+.venv/
+venv/
+.DS_Store
+
+# Raw + cleaned data for the offline ML sandbox (multi-GB)
+offline_data/
+.pytest_cache/
+
+# Tutorial data pulled from the public APIs
+tutorials/.cache/

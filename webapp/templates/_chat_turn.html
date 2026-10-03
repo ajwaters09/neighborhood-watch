@@ -1,0 +1,13 @@
+{# One bubble per turn: the final answer. Text the model wrote alongside its tool calls
+   ("let me look that up") stays in the history it sees, but isn't shown. #}
+{% if final_answer %}<div class="chat-bubble assistant md">{{ final_answer|markdown }}</div>{% endif %}
+{% if turn_id and final_answer %}
+<div class="chat-feedback" id="fb-{{ turn_id }}">
+  <span class="muted small">Helpful?</span>
+  <button type="button" class="icon-btn" aria-label="Helpful" title="Helpful"
+          hx-post="/chat/feedback/{{ turn_id }}" hx-vals='{"feedback": 1}' hx-target="#fb-{{ turn_id }}">👍</button>
+  <button type="button" class="icon-btn" aria-label="Not helpful" title="Not helpful"
+          hx-post="/chat/feedback/{{ turn_id }}" hx-vals='{"feedback": -1}' hx-target="#fb-{{ turn_id }}">👎</button>
+</div>
+{% endif %}
+{% if refresh_html %}{{ refresh_html|safe }}{% endif %}

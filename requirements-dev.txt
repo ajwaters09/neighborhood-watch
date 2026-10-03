@@ -1,0 +1,10 @@
+# Local tests and fake-data UI work: the app's dependencies plus the models' (src/outlook,
+# src/events_model.py, src/leading_indicators.py), which the notebooks install on Databricks.
+# tests/test_events_spark.py also needs pyspark and a JDK; it's skipped without them.
+-r requirements.txt
+pytest>=8
+numpy>=2
+pandas>=2.2
+scipy>=1.13
+scikit-learn>=1.5
+h3>=4

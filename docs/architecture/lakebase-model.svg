@@ -1,0 +1,184 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1340" height="800" viewBox="0 0 1340 800" font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6b6a65"/></marker></defs>
+<rect width="100%" height="100%" fill="#fcfcfb"/>
+<text x="20" y="34" font-size="20" font-weight="700" fill="#1b1b1a">Lakebase data model</text>
+<text x="20" y="55" font-size="12" fill="#55534e">Postgres for the app&#x27;s transactional reads and writes; Unity Catalog for everything analytical.</text>
+<rect x="20" y="70" width="930" height="700" rx="10" fill="#f5f9fe" stroke="#2a78d6" stroke-opacity="0.35"/>
+<text x="34" y="92" font-size="11" font-weight="700" letter-spacing="0.6" fill="#1c5cab">PUBLIC SCHEMA: THE APP&#x27;S TABLES</text>
+<rect x="980" y="70" width="340" height="420" rx="10" fill="#fefbf0" stroke="#c29a22" stroke-opacity="0.35"/>
+<text x="994" y="92" font-size="11" font-weight="700" letter-spacing="0.6" fill="#7d6210">SYNCED TABLES (READ-ONLY)</text>
+<rect x="980" y="520" width="340" height="250" rx="10" fill="#f9f8fe" stroke="#6f5bd0" stroke-opacity="0.35"/>
+<text x="994" y="542" font-size="11" font-weight="700" letter-spacing="0.6" fill="#4a3aa7">UNITY CATALOG</text>
+<polyline points="300,172 330,172 330,290 360,290" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="300,382 330,382 330,320 360,320" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="650,162 620,162 620,290 590,290" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="650,432 620,432 620,320 590,320" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="475,450 475,357" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="1150,570 1150,422" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="950,711 1000,711" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<rect x="40" y="120" width="260" height="119" rx="6" fill="#ffffff" stroke="#2a78d6" stroke-width="1.5"/>
+<path d="M40,148 v-22 a6,6 0 0 1 6,-6 h248 a6,6 0 0 1 6,6 v22 z" fill="#e6f0fc" stroke="#2a78d6" stroke-width="1.5"/>
+<text x="50" y="139" font-size="13" font-weight="700" fill="#1b1b1a">area_subscriptions</text>
+<text x="50" y="164" font-size="9" font-weight="700" fill="#2a78d6">PK</text>
+<text x="70" y="164" font-size="11" fill="#1b1b1a">subscription_id</text>
+<text x="290" y="164" font-size="10.5" fill="#898781" text-anchor="end">bigserial</text>
+<text x="50" y="181" font-size="9" font-weight="700" fill="#2a78d6">FK</text>
+<text x="70" y="181" font-size="11" fill="#1b1b1a">user_id</text>
+<text x="290" y="181" font-size="10.5" fill="#898781" text-anchor="end">bigint</text>
+<text x="70" y="198" font-size="11" fill="#1b1b1a">community_area</text>
+<text x="290" y="198" font-size="10.5" fill="#898781" text-anchor="end">int</text>
+<text x="70" y="215" font-size="11" fill="#1b1b1a">created_at</text>
+<text x="290" y="215" font-size="10.5" fill="#898781" text-anchor="end">timestamptz</text>
+<text x="70" y="232" font-size="11" fill="#1b1b1a">unique (user_id, community_area)</text>
+<text x="290" y="232" font-size="10.5" fill="#898781" text-anchor="end"></text>
+<rect x="40" y="330" width="260" height="119" rx="6" fill="#ffffff" stroke="#2a78d6" stroke-width="1.5"/>
+<path d="M40,358 v-22 a6,6 0 0 1 6,-6 h248 a6,6 0 0 1 6,6 v22 z" fill="#e6f0fc" stroke="#2a78d6" stroke-width="1.5"/>
+<text x="50" y="349" font-size="13" font-weight="700" fill="#1b1b1a">resident_reports</text>
+<text x="50" y="374" font-size="9" font-weight="700" fill="#2a78d6">PK</text>
+<text x="70" y="374" font-size="11" fill="#1b1b1a">report_id</text>
+<text x="290" y="374" font-size="10.5" fill="#898781" text-anchor="end">bigserial</text>
+<text x="50" y="391" font-size="9" font-weight="700" fill="#2a78d6">FK</text>
+<text x="70" y="391" font-size="11" fill="#1b1b1a">user_id</text>
+<text x="290" y="391" font-size="10.5" fill="#898781" text-anchor="end">bigint</text>
+<text x="70" y="408" font-size="11" fill="#1b1b1a">community_area</text>
+<text x="290" y="408" font-size="10.5" fill="#898781" text-anchor="end">int</text>
+<text x="70" y="425" font-size="11" fill="#1b1b1a">description</text>
+<text x="290" y="425" font-size="10.5" fill="#898781" text-anchor="end">text</text>
+<text x="70" y="442" font-size="11" fill="#1b1b1a">created_at</text>
+<text x="290" y="442" font-size="10.5" fill="#898781" text-anchor="end">timestamptz</text>
+<rect x="360" y="250" width="230" height="102" rx="6" fill="#ffffff" stroke="#2a78d6" stroke-width="1.5"/>
+<path d="M360,278 v-22 a6,6 0 0 1 6,-6 h218 a6,6 0 0 1 6,6 v22 z" fill="#e6f0fc" stroke="#2a78d6" stroke-width="1.5"/>
+<text x="370" y="269" font-size="13" font-weight="700" fill="#1b1b1a">users</text>
+<text x="370" y="294" font-size="9" font-weight="700" fill="#2a78d6">PK</text>
+<text x="390" y="294" font-size="11" fill="#1b1b1a">user_id</text>
+<text x="580" y="294" font-size="10.5" fill="#898781" text-anchor="end">bigserial</text>
+<text x="390" y="311" font-size="11" fill="#1b1b1a">email</text>
+<text x="580" y="311" font-size="10.5" fill="#898781" text-anchor="end">text, unique</text>
+<text x="390" y="328" font-size="11" fill="#1b1b1a">display_name</text>
+<text x="580" y="328" font-size="10.5" fill="#898781" text-anchor="end">text</text>
+<text x="390" y="345" font-size="11" fill="#1b1b1a">created_at</text>
+<text x="580" y="345" font-size="10.5" fill="#898781" text-anchor="end">timestamptz</text>
+<rect x="650" y="110" width="280" height="187" rx="6" fill="#ffffff" stroke="#2a78d6" stroke-width="1.5"/>
+<path d="M650,138 v-22 a6,6 0 0 1 6,-6 h268 a6,6 0 0 1 6,6 v22 z" fill="#e6f0fc" stroke="#2a78d6" stroke-width="1.5"/>
+<text x="660" y="129" font-size="13" font-weight="700" fill="#1b1b1a">alert_rules</text>
+<text x="660" y="154" font-size="9" font-weight="700" fill="#2a78d6">PK</text>
+<text x="680" y="154" font-size="11" fill="#1b1b1a">rule_id</text>
+<text x="920" y="154" font-size="10.5" fill="#898781" text-anchor="end">bigserial</text>
+<text x="660" y="171" font-size="9" font-weight="700" fill="#2a78d6">FK</text>
+<text x="680" y="171" font-size="11" fill="#1b1b1a">user_id</text>
+<text x="920" y="171" font-size="10.5" fill="#898781" text-anchor="end">bigint</text>
+<text x="680" y="188" font-size="11" fill="#1b1b1a">community_area</text>
+<text x="920" y="188" font-size="10.5" fill="#898781" text-anchor="end">int</text>
+<text x="680" y="205" font-size="11" fill="#1b1b1a">metric</text>
+<text x="920" y="205" font-size="10.5" fill="#898781" text-anchor="end">text</text>
+<text x="680" y="222" font-size="11" fill="#1b1b1a">threshold_pct</text>
+<text x="920" y="222" font-size="10.5" fill="#898781" text-anchor="end">numeric</text>
+<text x="680" y="239" font-size="11" fill="#1b1b1a">kind</text>
+<text x="920" y="239" font-size="10.5" fill="#898781" text-anchor="end">&#x27;threshold&#x27; | &#x27;trend&#x27;</text>
+<text x="680" y="256" font-size="11" fill="#1b1b1a">quiet_through</text>
+<text x="920" y="256" font-size="10.5" fill="#898781" text-anchor="end">date</text>
+<text x="680" y="273" font-size="11" fill="#1b1b1a">last_pct</text>
+<text x="920" y="273" font-size="10.5" fill="#898781" text-anchor="end">numeric</text>
+<text x="680" y="290" font-size="11" fill="#1b1b1a">created_at</text>
+<text x="920" y="290" font-size="10.5" fill="#898781" text-anchor="end">timestamptz</text>
+<rect x="650" y="380" width="280" height="153" rx="6" fill="#ffffff" stroke="#2a78d6" stroke-width="1.5"/>
+<path d="M650,408 v-22 a6,6 0 0 1 6,-6 h268 a6,6 0 0 1 6,6 v22 z" fill="#e6f0fc" stroke="#2a78d6" stroke-width="1.5"/>
+<text x="660" y="399" font-size="13" font-weight="700" fill="#1b1b1a">tool_invocations</text>
+<text x="660" y="424" font-size="9" font-weight="700" fill="#2a78d6">PK</text>
+<text x="680" y="424" font-size="11" fill="#1b1b1a">invocation_id</text>
+<text x="920" y="424" font-size="10.5" fill="#898781" text-anchor="end">bigserial</text>
+<text x="660" y="441" font-size="9" font-weight="700" fill="#2a78d6">FK</text>
+<text x="680" y="441" font-size="11" fill="#1b1b1a">user_id</text>
+<text x="920" y="441" font-size="10.5" fill="#898781" text-anchor="end">bigint, null for reads</text>
+<text x="680" y="458" font-size="11" fill="#1b1b1a">tool_name</text>
+<text x="920" y="458" font-size="10.5" fill="#898781" text-anchor="end">text</text>
+<text x="680" y="475" font-size="11" fill="#1b1b1a">community_area</text>
+<text x="920" y="475" font-size="10.5" fill="#898781" text-anchor="end">int</text>
+<text x="680" y="492" font-size="11" fill="#1b1b1a">success</text>
+<text x="920" y="492" font-size="10.5" fill="#898781" text-anchor="end">boolean</text>
+<text x="680" y="509" font-size="11" fill="#1b1b1a">error_message</text>
+<text x="920" y="509" font-size="10.5" fill="#898781" text-anchor="end">text</text>
+<text x="680" y="526" font-size="11" fill="#1b1b1a">created_at</text>
+<text x="920" y="526" font-size="10.5" fill="#898781" text-anchor="end">timestamptz</text>
+<rect x="360" y="450" width="230" height="238" rx="6" fill="#ffffff" stroke="#2a78d6" stroke-width="1.5"/>
+<path d="M360,478 v-22 a6,6 0 0 1 6,-6 h218 a6,6 0 0 1 6,6 v22 z" fill="#e6f0fc" stroke="#2a78d6" stroke-width="1.5"/>
+<text x="370" y="469" font-size="13" font-weight="700" fill="#1b1b1a">chat_turns</text>
+<text x="370" y="494" font-size="9" font-weight="700" fill="#2a78d6">PK</text>
+<text x="390" y="494" font-size="11" fill="#1b1b1a">turn_id</text>
+<text x="580" y="494" font-size="10.5" fill="#898781" text-anchor="end">bigserial</text>
+<text x="370" y="511" font-size="9" font-weight="700" fill="#2a78d6">FK</text>
+<text x="390" y="511" font-size="11" fill="#1b1b1a">user_id</text>
+<text x="580" y="511" font-size="10.5" fill="#898781" text-anchor="end">bigint</text>
+<text x="390" y="528" font-size="11" fill="#1b1b1a">chat_id</text>
+<text x="580" y="528" font-size="10.5" fill="#898781" text-anchor="end">text</text>
+<text x="390" y="545" font-size="11" fill="#1b1b1a">turn_index</text>
+<text x="580" y="545" font-size="10.5" fill="#898781" text-anchor="end">int</text>
+<text x="390" y="562" font-size="11" fill="#1b1b1a">active_area</text>
+<text x="580" y="562" font-size="10.5" fill="#898781" text-anchor="end">int</text>
+<text x="390" y="579" font-size="11" fill="#1b1b1a">user_message</text>
+<text x="580" y="579" font-size="10.5" fill="#898781" text-anchor="end">text</text>
+<text x="390" y="596" font-size="11" fill="#1b1b1a">assistant_message</text>
+<text x="580" y="596" font-size="10.5" fill="#898781" text-anchor="end">text</text>
+<text x="390" y="613" font-size="11" fill="#1b1b1a">tool_calls</text>
+<text x="580" y="613" font-size="10.5" fill="#898781" text-anchor="end">jsonb</text>
+<text x="390" y="630" font-size="11" fill="#1b1b1a">raw_messages</text>
+<text x="580" y="630" font-size="10.5" fill="#898781" text-anchor="end">jsonb</text>
+<text x="390" y="647" font-size="11" fill="#1b1b1a">model · latency_ms · error</text>
+<text x="580" y="647" font-size="10.5" fill="#898781" text-anchor="end"></text>
+<text x="390" y="664" font-size="11" fill="#1b1b1a">feedback</text>
+<text x="580" y="664" font-size="10.5" fill="#898781" text-anchor="end">-1 | 1</text>
+<text x="390" y="681" font-size="11" fill="#1b1b1a">feedback_at · created_at</text>
+<text x="580" y="681" font-size="10.5" fill="#898781" text-anchor="end"></text>
+<rect x="1000" y="120" width="300" height="136" rx="6" fill="#ffffff" stroke="#c29a22" stroke-width="1.5"/>
+<path d="M1000,148 v-22 a6,6 0 0 1 6,-6 h288 a6,6 0 0 1 6,6 v22 z" fill="#fcf4d8" stroke="#c29a22" stroke-width="1.5"/>
+<text x="1010" y="139" font-size="13" font-weight="700" fill="#1b1b1a">area_trend_metrics_lb</text>
+<text x="1010" y="164" font-size="9" font-weight="700" fill="#c29a22">PK</text>
+<text x="1030" y="164" font-size="11" fill="#1b1b1a">community_area</text>
+<text x="1290" y="164" font-size="10.5" fill="#898781" text-anchor="end">int</text>
+<text x="1010" y="181" font-size="9" font-weight="700" fill="#c29a22">PK</text>
+<text x="1030" y="181" font-size="11" fill="#1b1b1a">period</text>
+<text x="1290" y="181" font-size="10.5" fill="#898781" text-anchor="end">date</text>
+<text x="1010" y="198" font-size="9" font-weight="700" fill="#c29a22">PK</text>
+<text x="1030" y="198" font-size="11" fill="#1b1b1a">metric</text>
+<text x="1290" y="198" font-size="10.5" fill="#898781" text-anchor="end">text</text>
+<text x="1030" y="215" font-size="11" fill="#1b1b1a">metric_count</text>
+<text x="1290" y="215" font-size="10.5" fill="#898781" text-anchor="end">bigint</text>
+<text x="1030" y="232" font-size="11" fill="#1b1b1a">pct_change_vs_prior</text>
+<text x="1290" y="232" font-size="10.5" fill="#898781" text-anchor="end">double</text>
+<text x="1030" y="249" font-size="11" fill="#1b1b1a">rolling_3mo_avg</text>
+<text x="1290" y="249" font-size="10.5" fill="#898781" text-anchor="end">double</text>
+<rect x="1000" y="300" width="300" height="136" rx="6" fill="#ffffff" stroke="#c29a22" stroke-width="1.5"/>
+<path d="M1000,328 v-22 a6,6 0 0 1 6,-6 h288 a6,6 0 0 1 6,6 v22 z" fill="#fcf4d8" stroke="#c29a22" stroke-width="1.5"/>
+<text x="1010" y="319" font-size="13" font-weight="700" fill="#1b1b1a">area_trend_rolling_lb</text>
+<text x="1010" y="344" font-size="9" font-weight="700" fill="#c29a22">PK</text>
+<text x="1030" y="344" font-size="11" fill="#1b1b1a">community_area</text>
+<text x="1290" y="344" font-size="10.5" fill="#898781" text-anchor="end">int</text>
+<text x="1010" y="361" font-size="9" font-weight="700" fill="#c29a22">PK</text>
+<text x="1030" y="361" font-size="11" fill="#1b1b1a">metric</text>
+<text x="1290" y="361" font-size="10.5" fill="#898781" text-anchor="end">text</text>
+<text x="1010" y="378" font-size="9" font-weight="700" fill="#c29a22">PK</text>
+<text x="1030" y="378" font-size="11" fill="#1b1b1a">window_days</text>
+<text x="1290" y="378" font-size="10.5" fill="#898781" text-anchor="end">30 | 60 | 90</text>
+<text x="1030" y="395" font-size="11" fill="#1b1b1a">window_count</text>
+<text x="1290" y="395" font-size="10.5" fill="#898781" text-anchor="end">bigint</text>
+<text x="1030" y="412" font-size="11" fill="#1b1b1a">prior_window_count</text>
+<text x="1290" y="412" font-size="10.5" fill="#898781" text-anchor="end">bigint</text>
+<text x="1030" y="429" font-size="11" fill="#1b1b1a">as_of_date</text>
+<text x="1290" y="429" font-size="10.5" fill="#898781" text-anchor="end">date</text>
+<rect x="1000" y="570" width="300" height="56" rx="8" fill="#fcf4d8" stroke="#c29a22" stroke-width="1.5"/>
+<text x="1150.0" y="595.0" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">Gold: area_trend_metrics, _rolling</text>
+<text x="1150.0" y="612.0" font-size="11" fill="#55534e" text-anchor="middle">Delta, primary keys + CDF (04)</text>
+<rect x="1000" y="680" width="300" height="62" rx="8" fill="#f1eefc" stroke="#6f5bd0" stroke-width="1.5"/>
+<text x="1150.0" y="708.0" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">lb_&lt;table&gt;_history</text>
+<text x="1150.0" y="725.0" font-size="11" fill="#55534e" text-anchor="middle">→ subscription_events, analytics views (06, 07)</text>
+<rect x="305.89" y="221" width="48.22" height="17" rx="4" fill="#fcfcfb"/>
+<text x="330" y="234" font-size="10.5" fill="#55534e" text-anchor="middle">user_id</text>
+<rect x="595.89" y="216" width="48.22" height="17" rx="4" fill="#fcfcfb"/>
+<text x="620" y="229" font-size="10.5" fill="#55534e" text-anchor="middle">user_id</text>
+<rect x="450.89" y="401" width="48.22" height="17" rx="4" fill="#fcfcfb"/>
+<text x="475" y="414" font-size="10.5" fill="#55534e" text-anchor="middle">user_id</text>
+<rect x="1079.48" y="496" width="141.04" height="17" rx="4" fill="#fcfcfb"/>
+<text x="1150" y="509" font-size="10.5" fill="#55534e" text-anchor="middle">Synced Tables, triggered</text>
+<rect x="961.81" y="702.0" width="26.38" height="17" rx="4" fill="#fcfcfb"/>
+<text x="975.0" y="715.0" font-size="10.5" fill="#55534e" text-anchor="middle">CDF</text>
+</svg>

@@ -1,0 +1,195 @@
+<div class="insights" x-data="{ sel: null }">
+  <nav class="insight-nav" aria-label="Insights sections">
+    <span class="field-label">What moves crime</span>
+    <a href="#ins-weather">Weather &amp; holidays</a>
+    <a href="#ins-events">Festivals &amp; club nights</a>
+    <a href="#ins-311">311 early signals</a>
+  </nav>
+
+  {# ------------------------------------------------------------ weather + calendar (notebook 08) #}
+  {% from "_outlook_macros.html" import city_breakdown %}
+  <section class="card" id="ins-weather">
+    <h2>Weather, holidays and the week ahead</h2>
+    <p class="lede">Each week's forecast starts from every area's normal for the time of year, then moves the whole city up or down for the weather forecast, holidays, and how the last few weeks have run. The model learns those effects from Chicago's crime since 2007 and is re-fit every night.</p>
+    {% if weather %}
+      {% set e = weather.effects %}{% set o = weather.outlook %}{% set fc = weather.forecast %}
+      {% if o %}
+      <div class="week-panel">
+        <h3>This week · {{ o.week_start|short_date }}–{{ o.week_end|short_date }}</h3>
+        <div class="week-grid">
+          <div>
+            {% if fc %}
+            {# The daily forecast the outlook used (area_data.forecast_days_sql). Mean temperature,
+               since that's what the model uses, not the day's high. #}
+            <div class="fc-strip" role="list" aria-label="Daily forecast">
+              {% for d in fc.days %}
+              <div class="fc-day" role="listitem">
+                <div class="fc-dow">{{ d.weekday }}</div>
+                <div class="fc-date">{{ d.date }}</div>
+                <div class="fc-temp">{{ d.temp_f if d.temp_f is not none else "–" }}°</div>
+                {% if d.temp_vs_normal_f is not none %}
+                  {% set a = d.temp_vs_normal_f %}
+                  <div class="fc-anom {{ 'warm' if a >= 2 else 'cool' if a <= -2 else '' }}" title="Normal for this date: {{ d.normal_f }} °F">{% if a >= 1 or a <= -1 %}{{ "%+d"|format(a) }}° vs normal{% else %}normal{% endif %}</div>
+                {% endif %}
+                <div class="fc-rain{{ ' wet' if d.rain_in and d.rain_in >= 0.1 }}">{% if d.rain_in is none %}–{% elif d.rain_in >= 0.01 %}💧 {{ "%.2f"|format(d.rain_in) }} in{% else %}Dry{% endif %}</div>
+              </div>
+              {% endfor %}
+            </div>
+            <p class="caption">Average temperature and total rain each day, from the forecast issued {{ fc.issued|short_date }} that this week's outlook is built on. Normal is the same dates over the last 10 years.</p>
+            {% else %}
+            <p class="muted small">The daily forecast for this week isn't available.</p>
+            {% endif %}
+          </div>
+          <div>
+            <div class="week-call">
+              <span class="kpi-num">{{ "%+.1f"|format(o.citywide.pct_vs_normal) }}%</span>
+              <span class="kpi-text">citywide crime forecast vs. a normal week</span>
+            </div>
+            {{ city_breakdown(this_week_drivers, o.citywide.pct_vs_normal) }}
+            <p class="caption">{% if o.calls.up %}{{ o.calls.up|length }} area{{ "s" if o.calls.up|length != 1 }} called above normal{% else %}No area called above normal{% endif %}, {{ o.calls.down|length }} below; the rest are too close to call. See them on the map's Outlook layer.</p>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      <h3>What the model has learned</h3>
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-num">{{ "%+.1f"|format(e.per_degree_f_pct) }}%</div><div class="kpi-text">crime for each °F a week runs warmer than normal</div></div>
+        <div class="kpi"><div class="kpi-num">{{ "%+.1f"|format(e.per_inch_rain_pct) }}%</div><div class="kpi-text">for each inch of rain above normal that week</div></div>
+        <div class="kpi"><div class="kpi-num">{{ "%+.1f"|format(e.momentum_10pct_pct) }}%</div><div class="kpi-text">next week, after a month running 10% above normal (hot streaks partly carry over)</div></div>
+        {% if o %}<div class="kpi"><div class="kpi-num">{{ o.track_record.calls_right_pct }}%</div><div class="kpi-text">of area calls right when it makes one (backtest {{ o.track_record.backtest_from[:4] }}–{{ o.track_record.backtest_to[:4] }})</div></div>{% endif %}
+      </div>
+      <div class="two-col">
+        <div>
+          <h3>Citywide crime each week: actual, forecast, normal</h3>
+          <div class="chart-box"><canvas id="city-weeks-chart"></canvas></div>
+          <p class="caption">The last year of weekly forecasts, each made before its week began, as a real forecast would be (the dashed point is this week). Normal is what last year's pace predicts for the time of year.</p>
+        </div>
+        <div>
+          <h3>Holiday weeks</h3>
+          <div class="chart-box"><canvas id="holiday-chart"></canvas></div>
+          <p class="caption">Crime in a week containing each holiday, vs. an ordinary week at that time of year.</p>
+        </div>
+      </div>
+      <script type="application/json" id="insights-weather">{{ weather_json|safe }}</script>
+    {% else %}
+      <p class="muted">Weather and forecast effects unavailable{% if weather_error %} ({{ weather_error }}){% endif %}.</p>
+    {% endif %}
+  </section>
+
+  {# ------------------------------------------------------------ events (notebook 08b) #}
+  <section class="card" id="ins-events">
+    <h2>Festivals and club nights</h2>
+    <p class="lede">Big crowds bring a little more crime to the blocks around them while they're on, mostly theft. Each bar compares crime in an event's own blocks and the ring around them (about a quarter mile) with the same place on comparable days without an event.</p>
+    {% if events %}
+      <div class="two-col">
+        <div>
+          <h3>How much crime each kind of event adds nearby</h3>
+          <div class="chart-box short"><canvas id="event-lift-chart"></canvas></div>
+          <p class="caption">From every past festival on a city street permit and every logged show at 20 small music clubs since 2014. Pro sports are left out: everyone already plans around them.</p>
+        </div>
+        <div>
+          <h3>Coming up citywide (next 30 days)</h3>
+          {% set up = events.upcoming %}
+          {% if up and (up.festivals or up.club_nights) %}
+          <ul class="signal-list event-list">
+            {% for f in up.festivals[:6] %}
+            <li><span class="event-when">{{ f.start_date|short_date }}</span>
+              <div class="signal-body"><strong>{{ f.name }}</strong>
+                {% if f.community_area %}<a href="#" class="small" onclick="NW.jumpToArea({{ f.community_area }}); return false;">{{ f.area_name }}</a>{% endif %}
+                <div class="muted small">{% if f.extra_crimes >= 0.1 %}about {{ "%.1f"|format(f.extra_crimes) }} extra incidents nearby{% else %}no measurable extra expected{% endif %}, {% if f.past_editions %}based on previous years of this event{% else %}based on similar festivals{% endif %}</div>
+              </div></li>
+            {% endfor %}
+            {% for c in up.club_nights[:4] %}
+            <li><span class="event-when">{{ c.next_date|short_date }}</span>
+              <div class="signal-body"><strong>{{ c.place }}</strong> <span class="muted small">{{ c.nights }} show{{ "s" if c.nights != 1 }}</span>
+                {% if c.community_area %}<a href="#" class="small" onclick="NW.jumpToArea({{ c.community_area }}); return false;">{{ c.area_name }}</a>{% endif %}
+                <div class="muted small">{% if c.extra_crimes >= 0.1 %}about {{ "%.1f"|format(c.extra_crimes) }} extra incidents across them{% else %}no measurable extra expected{% endif %}</div>
+              </div></li>
+            {% endfor %}
+          </ul>
+          <p class="caption">About {{ "%.0f"|format(up.total_extra_crimes) }} extra incidents expected across all of them: small next to ~20,000 crimes a month citywide, but concentrated on a few blocks.</p>
+          {% else %}
+          <p class="muted small">Nothing scored on the calendar in the next 30 days.</p>
+          {% endif %}
+        </div>
+      </div>
+      <script type="application/json" id="insights-events">{{ events_json|safe }}</script>
+    {% else %}
+      <p class="muted">Event effects unavailable{% if events_error %} ({{ events_error }}){% endif %}.</p>
+    {% endif %}
+  </section>
+
+  {# ------------------------------------------------------------ 311 lead-lag (notebook 05) #}
+  <section class="card" id="ins-311">
+    <h2>Does 311 activity come before crime?</h2>
+    <p class="lede">Each cell compares one 311 request type (rows) with one crime category (columns). It shows how strongly an unusual rise in that 311 type in an area was followed by an unusual rise in that crime category there <strong>1–3 months later</strong>, across all 77 areas. Outlined cells passed every check below. Click a cell for details.</p>
+    {% if error %}
+      <p class="form-error">Leading-indicator analysis unavailable: {{ error }}</p>
+    {% else %}
+    <div class="heatmap-wrap">
+      <table class="heatmap">
+        <thead><tr><th></th>{% for c in crime_metrics %}<th scope="col"><span>{{ c|metric_label }}</span></th>{% endfor %}</tr></thead>
+        <tbody>
+        {% for s in sr_metrics %}
+          <tr>
+            <th scope="row">{{ s|metric_label }}</th>
+            {% for c in crime_metrics %}
+              {% set cell = cells.get(s ~ '|' ~ c) %}
+              {% if cell and cell.r is not none %}
+                {% set a = [[(cell.r|abs) / max_r, 1]|min, 0]|max %}
+                <td class="hm-cell{% if cell.is_leading %} leading{% endif %}"
+                    style="--a: {{ '%.2f'|format(a) }}; --hue: {{ 'var(--nw-worse)' if cell.r > 0 else 'var(--nw-better)' }}"
+                    :class="{ picked: sel === '{{ s }}|{{ c }}' }"
+                    @click="sel = '{{ s }}|{{ c }}'; $nextTick(() => NW.renderLagChart(sel))"
+                    title="{{ s|metric_label }} → {{ c|metric_label }}: r={{ '%.2f'|format(cell.r) }} at {{ cell.best_lag }} mo">
+                  {{ '%.2f'|format(cell.r) }}<small>{{ cell.best_lag }}mo</small>
+                </td>
+              {% else %}
+                <td class="hm-cell empty">–</td>
+              {% endif %}
+            {% endfor %}
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <script type="application/json" id="insights-cells">{{ cells_json|safe }}</script>
+    {% endif %}
+  </section>
+
+  <div class="two-col">
+    <section class="card">
+      <template x-if="!sel"><div>
+        <h2>Strongest leading signals</h2>
+        {% if pairs %}
+        <ol class="pair-list">
+          {% for p in pairs[:8] %}
+          <li><strong>{{ p.sr_metric|metric_label }}</strong> → {{ p.crime_metric|metric_label|lower }}
+            <span class="muted small">~{{ p.lag_months }} mo later · r={{ '%.2f'|format(p.r) }}{% if p.reverse_r is not none %} (reverse {{ '%.2f'|format(p.reverse_r) }}){% endif %}</span></li>
+          {% endfor %}
+        </ol>
+        {% else %}
+        <p class="muted">No pair passed every check. This can be a real finding too: none of these 311 types reliably come before crime once area size and citywide swings are accounted for.</p>
+        {% endif %}
+      </div></template>
+      <template x-if="sel"><div>
+        <h2 id="lag-title"></h2>
+        <p class="muted small" id="lag-sentence"></p>
+        <div class="chart-box small"><canvas id="lag-chart"></canvas></div>
+        <button type="button" class="secondary outline" @click="sel = null">Back to top signals</button>
+      </div></template>
+    </section>
+
+    <section class="card method">
+      <h2>How this is measured</h2>
+      <ol>
+        <li>Monthly counts for each area, on a log scale so big and small areas move comparably.</li>
+        <li>Each area's own average is removed (big areas have more of everything), and so is each month's citywide average (summer raises everything everywhere).</li>
+        <li>What's left, "unusually high for this area this month", is correlated between 311 in month <em>t</em> and crime in month <em>t</em>+1, +2, +3.</li>
+        <li>A pair is flagged only if it's statistically significant after correcting for every pair tested, stronger than the same-month link, and stronger than the reverse direction (crime coming before 311).</li>
+      </ol>
+      <p class="caption"><strong>Correlation, not causation.</strong> A flagged pair is a citywide historical pattern worth watching. It isn't proof that one causes the other, and it isn't a forecast for any single area. Computed by <code>notebooks/05_leading_indicators.py</code>.</p>
+    </section>
+  </div>
+</div>

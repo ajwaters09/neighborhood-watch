@@ -1,0 +1,5 @@
+# The tutorials: the project's dev requirements plus Jupyter, plotting and parquet support.
+-r ../requirements-dev.txt
+jupyterlab>=4
+matplotlib>=3.8
+pyarrow>=15

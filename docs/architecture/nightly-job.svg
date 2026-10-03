@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1540" height="600" viewBox="0 0 1540 600" font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6b6a65"/></marker></defs>
+<rect width="100%" height="100%" fill="#fcfcfb"/>
+<text x="20" y="34" font-size="20" font-weight="700" fill="#1b1b1a">The nightly pipeline</text>
+<text x="20" y="55" font-size="12" fill="#55534e">One Lakeflow Job on serverless compute. Each notebook starts once everything it reads is fresh.</text>
+<polyline points="250,118.0 290,118.0" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="250,298.0 290,298.0" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="250,208.0 540,208.0" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="250,388.0 540,388.0" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="500,298.0 540,298.0" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="395.0,270 395.0,253 645.0,253 645.0,236" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="395.0,326 395.0,343 645.0,343 645.0,360" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="750,298.0 790,298.0" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="1000,298.0 1040,298.0" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="895.0,326 895.0,388.0 1040,388.0" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" stroke-dasharray="5 4" marker-end="url(#arrow)"/>
+<polyline points="1250,298.0 1270,298.0 1270,218.0 1290,218.0" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="750,198.0 1290,198.0" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<rect x="40" y="90" width="210" height="56" rx="8" fill="#fbefe3" stroke="#c4813f" stroke-width="1.5"/>
+<text x="145.0" y="115.0" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">02d · Wikipedia</text>
+<text x="145.0" y="132.0" font-size="11" fill="#55534e" text-anchor="middle">changed revisions only</text>
+<rect x="40" y="180" width="210" height="56" rx="8" fill="#fbefe3" stroke="#c4813f" stroke-width="1.5"/>
+<text x="145.0" y="205.0" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">02b · Weather</text>
+<text x="145.0" y="222.0" font-size="11" fill="#55534e" text-anchor="middle">Open-Meteo observed + forecast</text>
+<rect x="40" y="270" width="210" height="56" rx="8" fill="#fbefe3" stroke="#c4813f" stroke-width="1.5"/>
+<text x="145.0" y="295.0" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">02 · Crime + 311</text>
+<text x="145.0" y="312.0" font-size="11" fill="#55534e" text-anchor="middle">SODA, watermarked appends</text>
+<rect x="40" y="360" width="210" height="56" rx="8" fill="#fbefe3" stroke="#c4813f" stroke-width="1.5"/>
+<text x="145.0" y="385.0" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">02c · Events</text>
+<text x="145.0" y="402.0" font-size="11" fill="#55534e" text-anchor="middle">permits · setlist.fm · Ticketmaster</text>
+<rect x="290" y="90" width="210" height="56" rx="8" fill="#eef2f6" stroke="#7d8b9b" stroke-width="1.5"/>
+<text x="395.0" y="115.0" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">03c · Wiki passages</text>
+<text x="395.0" y="132.0" font-size="11" fill="#55534e" text-anchor="middle">chunks + vector index sync</text>
+<rect x="290" y="270" width="210" height="56" rx="8" fill="#eef2f6" stroke="#7d8b9b" stroke-width="1.5"/>
+<text x="395.0" y="295.0" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">03 · Silver</text>
+<text x="395.0" y="312.0" font-size="11" fill="#55534e" text-anchor="middle">type · clean · deduplicate</text>
+<rect x="540" y="180" width="210" height="56" rx="8" fill="#fcf4d8" stroke="#c29a22" stroke-width="1.5"/>
+<text x="645.0" y="205.0" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">08 · Next-week outlook</text>
+<text x="645.0" y="222.0" font-size="11" fill="#55534e" text-anchor="middle">backtest + live forecast</text>
+<rect x="540" y="270" width="210" height="56" rx="8" fill="#eef2f6" stroke="#7d8b9b" stroke-width="1.5"/>
+<text x="645.0" y="295.0" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">03b · Crime categories</text>
+<text x="645.0" y="312.0" font-size="11" fill="#55534e" text-anchor="middle">ai_classify, new pairs only</text>
+<rect x="540" y="360" width="210" height="56" rx="8" fill="#fcf4d8" stroke="#c29a22" stroke-width="1.5"/>
+<text x="645.0" y="385.0" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">08b · Events look-ahead</text>
+<text x="645.0" y="402.0" font-size="11" fill="#55534e" text-anchor="middle">H3 · Gamma-Poisson</text>
+<rect x="790" y="270" width="210" height="56" rx="8" fill="#fcf4d8" stroke="#c29a22" stroke-width="1.5"/>
+<text x="895.0" y="295.0" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">04 · Gold trend tables</text>
+<text x="895.0" y="312.0" font-size="11" fill="#55534e" text-anchor="middle">windows · normals · profile</text>
+<rect x="1040" y="270" width="210" height="56" rx="8" fill="#fcf4d8" stroke="#c29a22" stroke-width="1.5"/>
+<text x="1145.0" y="295.0" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">05 · Leading indicators</text>
+<text x="1145.0" y="312.0" font-size="11" fill="#55534e" text-anchor="middle">311 → crime lead-lag</text>
+<rect x="1290" y="180" width="210" height="56" rx="8" fill="#fcf4d8" stroke="#c29a22" stroke-width="1.5"/>
+<text x="1395.0" y="205.0" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">09 · Area narratives</text>
+<text x="1395.0" y="222.0" font-size="11" fill="#55534e" text-anchor="middle">ai_query over the above</text>
+<rect x="1040" y="360" width="210" height="56" rx="8" fill="#ffffff" stroke="#898781" stroke-width="1.5" stroke-dasharray="6 4"/>
+<text x="1145.0" y="385.0" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">Re-trigger Synced Tables</text>
+<text x="1145.0" y="402.0" font-size="11" fill="#55534e" text-anchor="middle">Lakebase · manual step</text>
+<rect x="40" y="470" width="1460" height="76" rx="8" fill="#ffffff" stroke="#c3c2b7" stroke-width="1.5"/>
+<text x="770.0" y="497.5" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">Run once, outside the job</text>
+<text x="770.0" y="514.5" font-size="11" fill="#55534e" text-anchor="middle">00 schema, volume, secrets   ·   01 / 01b full crime and 311 history   ·   01c seed weather and events from the volume</text>
+<text x="770.0" y="529.5" font-size="11" fill="#55534e" text-anchor="middle">06 / 07 analytics views over Lakebase CDF   ·   tests/smoke_test_agent_tools after changing tools or connections</text>
+</svg>

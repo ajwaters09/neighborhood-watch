@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "fastapi",
+      "runtimeExecutable": ".venv/bin/uvicorn",
+      "runtimeArgs": ["webapp.main:app", "--reload", "--port", "8000"],
+      "port": 8000
+    },
+    {
+      "name": "fastapi-fake",
+      "runtimeExecutable": "env",
+      "runtimeArgs": ["NW_FAKE_DATA=1", "SESSION_SECRET=local-dev-only", ".venv/bin/uvicorn", "webapp.main:app", "--reload", "--port", "8001"],
+      "port": 8001
+    }
+  ]
+}

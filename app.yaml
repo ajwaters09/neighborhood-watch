@@ -1,0 +1,24 @@
+# Databricks App config. The app's source is the whole repo folder, so `webapp.main:app` is
+# relative to the repo root. `bash -c` lets the port come from plain shell expansion.
+#
+# Each `valueFrom` names a resource on the app (App details -> Resources):
+# - session-secret: a secret holding a random value (python3 -c "import secrets; print(secrets.token_hex(32))").
+#   Without it, logins reset whenever the app restarts.
+# - sql-warehouse: the SQL warehouse for Unity Catalog reads.
+# - chat-model: the Foundation Model serving endpoint behind the chat agent.
+# - wiki-index (no env var): a vector search index resource on area_wiki_chunks_index, which grants
+#   the service principal query access for search_area_background.
+#
+# Everything else workspace-specific is in src/config.py. The service principal's Lakebase grants
+# are in lakebase/grant_app_access.sql, its Unity Catalog grants in docs/operations.md.
+command:
+  - bash
+  - -c
+  - "uvicorn webapp.main:app --host 0.0.0.0 --port ${DATABRICKS_APP_PORT:-8000}"
+env:
+  - name: SESSION_SECRET
+    valueFrom: session-secret
+  - name: DATABRICKS_WAREHOUSE_ID
+    valueFrom: sql-warehouse
+  - name: DATABRICKS_SERVING_ENDPOINT
+    valueFrom: chat-model

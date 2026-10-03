@@ -1,0 +1,17 @@
+{% if error %}
+<p class="form-error">{{ error }}</p>
+{% elif not records %}
+<p class="muted">No records in this window.</p>
+{% else %}
+<ul class="records">
+  {% for r in records %}
+  <li>
+    <span class="pill {{ 'pill-crime' if r.source == 'crime' else 'pill-311' }}">{{ 'Crime' if r.source == 'crime' else '311' }}</span>
+    <div>
+      <div class="rec-type">{{ (r.type or '')|title }}{% if r.arrest %} <span class="tag">arrest</span>{% endif %}</div>
+      <div class="rec-meta">{{ (r.timestamp or '')[:16]|replace('T', ' ') }}{% if r.description or r.address %} · {{ r.description or r.address }}{% endif %}{% if r.status %} · {{ r.status }}{% endif %}</div>
+    </div>
+  </li>
+  {% endfor %}
+</ul>
+{% endif %}

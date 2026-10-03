@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+{% include "_head.html" %}
+<title>Neighborhood Watch · Sign in</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap">
+<script defer src="https://unpkg.com/alpinejs@3.14.1/dist/cdn.min.js"></script>
+</head>
+<body class="auth-page">
+<div id="progress-bar" aria-hidden="true"></div>
+<header class="auth-top">
+  <div class="brand"><span class="brand-mark" aria-hidden="true"></span>Neighborhood Watch</div>
+</header>
+
+<main class="auth-main">
+  {% include "_chicago_mark.svg" %}
+  <h1>An early-warning system for Chicago's neighborhoods.</h1>
+  <p class="auth-lede">Chicago crime and 311 data for every community area, with early signals and a forecast for the week ahead.</p>
+
+  {# The slot keeps the Sign up form's height, so switching tabs doesn't re-center the page. #}
+  <div class="auth-card-slot">
+  <section class="auth-card" x-data="{ mode: 'login' }">
+    <div class="segmented" role="tablist">
+      <button type="button" role="tab" :aria-selected="mode === 'login'" :class="{ on: mode === 'login' }" @click="mode = 'login'; $refs.err.innerHTML = ''">Log in</button>
+      <button type="button" role="tab" :aria-selected="mode === 'signup'" :class="{ on: mode === 'signup' }" @click="mode = 'signup'; $refs.err.innerHTML = ''">Sign up</button>
+    </div>
+
+    <form x-show="mode === 'login'" hx-post="/login" hx-target="#auth-error" hx-disabled-elt="find button">
+      <label>Email
+        <input type="email" name="email" placeholder="you@example.com" autocomplete="email" required autofocus>
+      </label>
+      <button type="submit">Log in</button>
+    </form>
+
+    <form x-show="mode === 'signup'" x-cloak hx-post="/signup" hx-target="#auth-error" hx-disabled-elt="find button">
+      <label>Email
+        <input type="email" name="email" placeholder="you@example.com" autocomplete="email" required>
+      </label>
+      <label>Display name <span class="optional">(optional)</span>
+        <input type="text" name="display_name" placeholder="How should we greet you?" autocomplete="nickname">
+      </label>
+      <button type="submit">Create account</button>
+    </form>
+
+    <div id="auth-error" x-ref="err" aria-live="polite"></div>
+    <p class="fine-print">Demo app: sign in with just your email. No password needed.</p>
+  </section>
+  </div>
+</main>
+
+<script src="/static/app.js?v={{ static_version() }}"></script>
+</body>
+</html>

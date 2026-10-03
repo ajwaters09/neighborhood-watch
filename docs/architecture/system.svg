@@ -1,0 +1,189 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1670" height="960" viewBox="0 0 1670 960" font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6b6a65"/></marker></defs>
+<rect width="100%" height="100%" fill="#fcfcfb"/>
+<text x="20" y="34" font-size="20" font-weight="700" fill="#1b1b1a">Neighborhood Watch: system architecture</text>
+<text x="20" y="55" font-size="12" fill="#55534e">Chicago crime + 311 early warning on Databricks. Notebook numbers in parentheses; arrows show data flow.</text>
+<rect x="20" y="70" width="200" height="680" rx="10" fill="#f4f3ef" stroke="#9a988f" stroke-opacity="0.35"/>
+<text x="34" y="92" font-size="11" font-weight="700" letter-spacing="0.6" fill="#55534e">SOURCES</text>
+<rect x="250" y="70" width="220" height="680" rx="10" fill="#fdf8f3" stroke="#c4813f" stroke-opacity="0.35"/>
+<text x="264" y="92" font-size="11" font-weight="700" letter-spacing="0.6" fill="#8f5420">INGEST: BRONZE</text>
+<rect x="500" y="70" width="210" height="680" rx="10" fill="#f7f9fb" stroke="#7d8b9b" stroke-opacity="0.35"/>
+<text x="514" y="92" font-size="11" font-weight="700" letter-spacing="0.6" fill="#4c5866">CLEAN: SILVER</text>
+<rect x="740" y="70" width="240" height="680" rx="10" fill="#fefbf0" stroke="#c29a22" stroke-opacity="0.35"/>
+<text x="754" y="92" font-size="11" font-weight="700" letter-spacing="0.6" fill="#7d6210">GOLD AND MODELS</text>
+<rect x="1010" y="70" width="220" height="680" rx="10" fill="#f5f9fe" stroke="#2a78d6" stroke-opacity="0.35"/>
+<text x="1024" y="92" font-size="11" font-weight="700" letter-spacing="0.6" fill="#1c5cab">SERVING</text>
+<rect x="1260" y="70" width="220" height="680" rx="10" fill="#f4fbf8" stroke="#1b9e6f" stroke-opacity="0.35"/>
+<text x="1274" y="92" font-size="11" font-weight="700" letter-spacing="0.6" fill="#11704d">DATABRICKS APP</text>
+<rect x="1510" y="70" width="140" height="680" rx="10" fill="#f4f3ef" stroke="#9a988f" stroke-opacity="0.35"/>
+<text x="1524" y="92" font-size="11" font-weight="700" letter-spacing="0.6" fill="#55534e">USERS</text>
+<rect x="250" y="780" width="980" height="140" rx="10" fill="#f9f8fe" stroke="#6f5bd0" stroke-opacity="0.35"/>
+<text x="264" y="802" font-size="11" font-weight="700" letter-spacing="0.6" fill="#4a3aa7">ANALYTICS LOOP</text>
+<polyline points="215,138 265,138" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="215,250 235,250 235,228 265,228" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="215,290 235,290 235,338 265,338" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="215,365 235,365 235,338" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round"/>
+<polyline points="215,449 235,449 235,365" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round"/>
+<polyline points="360,256 360,280" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="455,138 515,138" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="455,330 485,330 485,261 515,261" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="485,330 485,433 515,433" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="605,292 605,316" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="695,261 725,261" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round"/>
+<polyline points="695,347 725,347" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round"/>
+<polyline points="695,433 725,433" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round"/>
+<polyline points="725,261 725,221 755,221" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="725,261 725,299 755,299" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="725,261 725,455 755,455" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="725,261 725,533 755,533" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="725,261 725,631 755,631" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="695,138 1025,138" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="965,221 995,221" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round"/>
+<polyline points="965,299 995,299" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round"/>
+<polyline points="965,377 995,377" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round"/>
+<polyline points="965,455 995,455" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round"/>
+<polyline points="965,533 995,533" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round"/>
+<polyline points="995,221 995,533" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round"/>
+<polyline points="995,386 1025,386" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="965,631 1025,631" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="1215,138 1275,138" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="1215,221 1275,221" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<polyline points="1215,386 1275,386" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="1215,608 1275,608" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<polyline points="1370,260 1370,330" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<polyline points="1495,470 1525,470" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+<polyline points="1120,668 1120,828" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="1025,859 965,859" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="755,859 695,859" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<polyline points="515,859 455,859" fill="none" stroke="#6b6a65" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<rect x="35" y="110" width="170" height="56" rx="8" fill="#ffffff" stroke="#9a988f" stroke-width="1.5"/>
+<text x="120.0" y="135.0" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">Wikipedia</text>
+<text x="120.0" y="152.0" font-size="11" fill="#55534e" text-anchor="middle">MediaWiki API · 77 articles</text>
+<rect x="35" y="228" width="170" height="84" rx="8" fill="#ffffff" stroke="#9a988f" stroke-width="1.5"/>
+<text x="120.0" y="252.0" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">Chicago Data Portal</text>
+<text x="120.0" y="269.0" font-size="11" fill="#55534e" text-anchor="middle">SODA API</text>
+<text x="120.0" y="284.0" font-size="11" fill="#55534e" text-anchor="middle">crimes · 311 requests</text>
+<text x="120.0" y="299.0" font-size="11" fill="#55534e" text-anchor="middle">street + park permits</text>
+<rect x="35" y="334" width="170" height="62" rx="8" fill="#ffffff" stroke="#9a988f" stroke-width="1.5"/>
+<text x="120.0" y="362.0" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">Open-Meteo</text>
+<text x="120.0" y="379.0" font-size="11" fill="#55534e" text-anchor="middle">observed + forecast weather</text>
+<rect x="35" y="418" width="170" height="62" rx="8" fill="#ffffff" stroke="#9a988f" stroke-width="1.5"/>
+<text x="120.0" y="446.0" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">setlist.fm · Ticketmaster</text>
+<text x="120.0" y="463.0" font-size="11" fill="#55534e" text-anchor="middle">club shows, upcoming events</text>
+<rect x="265" y="110" width="190" height="56" rx="8" fill="#fbefe3" stroke="#c4813f" stroke-width="1.5"/>
+<text x="360.0" y="135.0" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">bronze_wiki_pages (02d)</text>
+<text x="360.0" y="152.0" font-size="11" fill="#55534e" text-anchor="middle">only changed revisions</text>
+<rect x="265" y="200" width="190" height="56" rx="8" fill="#fbefe3" stroke="#c4813f" stroke-width="1.5"/>
+<text x="360.0" y="225.0" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">UC Volume: landing</text>
+<text x="360.0" y="242.0" font-size="11" fill="#55534e" text-anchor="middle">bulk crime CSV · seed files</text>
+<rect x="265" y="280" width="190" height="116" rx="8" fill="#fbefe3" stroke="#c4813f" stroke-width="1.5"/>
+<text x="360.0" y="312.5" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">Bronze Delta tables</text>
+<text x="360.0" y="329.5" font-size="11" fill="#55534e" text-anchor="middle">bronze_crimes · bronze_311</text>
+<text x="360.0" y="344.5" font-size="11" fill="#55534e" text-anchor="middle">weather · permits · setlists</text>
+<text x="360.0" y="359.5" font-size="11" fill="#55534e" text-anchor="middle">all-string, watermarked</text>
+<text x="360.0" y="374.5" font-size="11" fill="#55534e" text-anchor="middle">(01, 01b, 01c, 02, 02b, 02c)</text>
+<rect x="515" y="110" width="180" height="56" rx="8" fill="#eef2f6" stroke="#7d8b9b" stroke-width="1.5"/>
+<text x="605.0" y="135.0" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">silver_wiki_chunks (03c)</text>
+<text x="605.0" y="152.0" font-size="11" fill="#55534e" text-anchor="middle">~940 passages</text>
+<rect x="515" y="230" width="180" height="62" rx="8" fill="#eef2f6" stroke="#7d8b9b" stroke-width="1.5"/>
+<text x="605.0" y="258.0" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">silver_crimes · silver_311</text>
+<text x="605.0" y="275.0" font-size="11" fill="#55534e" text-anchor="middle">typed · deduplicated (03)</text>
+<rect x="515" y="316" width="180" height="62" rx="8" fill="#eef2f6" stroke="#7d8b9b" stroke-width="1.5"/>
+<text x="605.0" y="344.0" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">crime_category_map</text>
+<text x="605.0" y="361.0" font-size="11" fill="#55534e" text-anchor="middle">ai_classify, once per pair (03b)</text>
+<rect x="515" y="402" width="180" height="62" rx="8" fill="#eef2f6" stroke="#7d8b9b" stroke-width="1.5"/>
+<text x="605.0" y="430.0" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">silver_events (08b)</text>
+<text x="605.0" y="447.0" font-size="11" fill="#55534e" text-anchor="middle">H3 cells, Spark build</text>
+<rect x="755" y="190" width="210" height="62" rx="8" fill="#fcf4d8" stroke="#c29a22" stroke-width="1.5"/>
+<text x="860.0" y="218.0" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">outlook_* (08)</text>
+<text x="860.0" y="235.0" font-size="11" fill="#55534e" text-anchor="middle">Poisson GLM + NB calls · MLflow</text>
+<rect x="755" y="268" width="210" height="62" rx="8" fill="#fcf4d8" stroke="#c29a22" stroke-width="1.5"/>
+<text x="860.0" y="296.0" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">events_upcoming (08b)</text>
+<text x="860.0" y="313.0" font-size="11" fill="#55534e" text-anchor="middle">Gamma-Poisson look-ahead</text>
+<rect x="755" y="346" width="210" height="62" rx="8" fill="#fcf4d8" stroke="#c29a22" stroke-width="1.5"/>
+<text x="860.0" y="374.0" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">indicator_lead_lag (05)</text>
+<text x="860.0" y="391.0" font-size="11" fill="#55534e" text-anchor="middle">311 → crime lead-lag</text>
+<rect x="755" y="424" width="210" height="62" rx="8" fill="#fcf4d8" stroke="#c29a22" stroke-width="1.5"/>
+<text x="860.0" y="452.0" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">area_narratives (09)</text>
+<text x="860.0" y="469.0" font-size="11" fill="#55534e" text-anchor="middle">ai_query, nightly</text>
+<rect x="755" y="502" width="210" height="62" rx="8" fill="#fcf4d8" stroke="#c29a22" stroke-width="1.5"/>
+<text x="860.0" y="530.0" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">area_trend_normals (04)</text>
+<text x="860.0" y="547.0" font-size="11" fill="#55534e" text-anchor="middle">+ area_profile: per resident</text>
+<rect x="755" y="596" width="210" height="72" rx="8" fill="#fcf4d8" stroke="#c29a22" stroke-width="1.5"/>
+<text x="860.0" y="621.5" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">area_trend_metrics (04)</text>
+<text x="860.0" y="638.5" font-size="11" fill="#55534e" text-anchor="middle">+ area_trend_rolling</text>
+<text x="860.0" y="653.5" font-size="11" fill="#55534e" text-anchor="middle">monthly · 30/60/90-day windows</text>
+<rect x="1025" y="110" width="190" height="56" rx="8" fill="#e6f0fc" stroke="#2a78d6" stroke-width="1.5"/>
+<text x="1120.0" y="135.0" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">Vector Search index</text>
+<text x="1120.0" y="152.0" font-size="11" fill="#55534e" text-anchor="middle">hybrid · gte-large embeddings</text>
+<rect x="1025" y="190" width="190" height="62" rx="8" fill="#e6f0fc" stroke="#2a78d6" stroke-width="1.5"/>
+<text x="1120.0" y="218.0" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">Foundation Model API</text>
+<text x="1120.0" y="235.0" font-size="11" fill="#55534e" text-anchor="middle">Claude Sonnet: chat, ai_query</text>
+<rect x="1025" y="350" width="190" height="72" rx="8" fill="#e6f0fc" stroke="#2a78d6" stroke-width="1.5"/>
+<text x="1120.0" y="375.5" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">SQL Warehouse</text>
+<text x="1120.0" y="392.5" font-size="11" fill="#55534e" text-anchor="middle">Statement Execution API</text>
+<text x="1120.0" y="407.5" font-size="11" fill="#55534e" text-anchor="middle">small gold tables, cached 1 h</text>
+<rect x="1025" y="548" width="190" height="120" rx="8" fill="#e6f0fc" stroke="#2a78d6" stroke-width="1.5"/>
+<text x="1120.0" y="582.5" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">Lakebase Postgres</text>
+<text x="1120.0" y="599.5" font-size="11" fill="#55534e" text-anchor="middle">Synced Tables: *_lb</text>
+<text x="1120.0" y="614.5" font-size="11" fill="#55534e" text-anchor="middle">users · subscriptions · reports</text>
+<text x="1120.0" y="629.5" font-size="11" fill="#55534e" text-anchor="middle">alert_rules · tool_invocations</text>
+<text x="1120.0" y="644.5" font-size="11" fill="#55534e" text-anchor="middle">chat_turns</text>
+<rect x="1275" y="110" width="190" height="150" rx="8" fill="#e3f5ee" stroke="#1b9e6f" stroke-width="1.5"/>
+<text x="1370.0" y="159.5" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">Chat agent</text>
+<text x="1370.0" y="176.5" font-size="11" fill="#55534e" text-anchor="middle">OpenAI-protocol tool loop</text>
+<text x="1370.0" y="191.5" font-size="11" fill="#55534e" text-anchor="middle">8 read tools · 2 write tools</text>
+<text x="1370.0" y="206.5" font-size="11" fill="#55534e" text-anchor="middle">no agent framework</text>
+<text x="1370.0" y="221.5" font-size="11" fill="#55534e" text-anchor="middle">every call logged</text>
+<rect x="1275" y="330" width="190" height="338" rx="8" fill="#e3f5ee" stroke="#1b9e6f" stroke-width="1.5"/>
+<text x="1370.0" y="436.0" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">Web app</text>
+<text x="1370.0" y="453.0" font-size="11" fill="#55534e" text-anchor="middle">FastAPI · HTMX · Alpine</text>
+<text x="1370.0" y="468.0" font-size="11" fill="#55534e" text-anchor="middle">Leaflet map · Chart.js</text>
+<text x="1370.0" y="483.0" font-size="11" fill="#55534e" text-anchor="middle"></text>
+<text x="1370.0" y="498.0" font-size="11" fill="#55534e" text-anchor="middle">Explore: map + area panel</text>
+<text x="1370.0" y="513.0" font-size="11" fill="#55534e" text-anchor="middle">My Areas: subscriptions, alerts</text>
+<text x="1370.0" y="528.0" font-size="11" fill="#55534e" text-anchor="middle">Insights: forecast drivers,</text>
+<text x="1370.0" y="543.0" font-size="11" fill="#55534e" text-anchor="middle">events, 311 lead-lag</text>
+<text x="1370.0" y="558.0" font-size="11" fill="#55534e" text-anchor="middle"></text>
+<text x="1370.0" y="573.0" font-size="11" fill="#55534e" text-anchor="middle">fake-data mode for local work</text>
+<rect x="1525" y="440" width="110" height="60" rx="8" fill="#ffffff" stroke="#55534e" stroke-width="1.5"/>
+<text x="1580.0" y="467.0" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">Residents</text>
+<text x="1580.0" y="484.0" font-size="11" fill="#55534e" text-anchor="middle">in the browser</text>
+<rect x="265" y="690" width="700" height="44" rx="8" fill="#ffffff" stroke="#c3c2b7" stroke-width="1.5"/>
+<text x="615.0" y="709.0" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">Lakeflow Job, nightly: pulls → silver → gold → models</text>
+<text x="615.0" y="726.0" font-size="11" fill="#55534e" text-anchor="middle">dependency graph on the next page</text>
+<rect x="1025" y="828" width="190" height="62" rx="8" fill="#f1eefc" stroke="#6f5bd0" stroke-width="1.5"/>
+<text x="1120.0" y="856.0" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">lb_&lt;table&gt;_history</text>
+<text x="1120.0" y="873.0" font-size="11" fill="#55534e" text-anchor="middle">Delta, via Lakebase CDF</text>
+<rect x="755" y="828" width="210" height="62" rx="8" fill="#f1eefc" stroke="#6f5bd0" stroke-width="1.5"/>
+<text x="860.0" y="856.0" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">subscription_events (06)</text>
+<text x="860.0" y="873.0" font-size="11" fill="#55534e" text-anchor="middle">subscribe · unsubscribe · report</text>
+<rect x="515" y="828" width="180" height="62" rx="8" fill="#f1eefc" stroke="#6f5bd0" stroke-width="1.5"/>
+<text x="605.0" y="856.0" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">Analytics views (07)</text>
+<text x="605.0" y="873.0" font-size="11" fill="#55534e" text-anchor="middle">tool usage · chat quality</text>
+<rect x="265" y="828" width="190" height="62" rx="8" fill="#f1eefc" stroke="#6f5bd0" stroke-width="1.5"/>
+<text x="360.0" y="856.0" font-size="13" font-weight="700" fill="#1b1b1a" text-anchor="middle">Dashboards and evals</text>
+<text x="360.0" y="873.0" font-size="11" fill="#55534e" text-anchor="middle">Databricks SQL · MLflow</text>
+<rect x="208.16" y="205" width="53.68" height="17" rx="4" fill="#fcfcfb"/>
+<text x="235" y="218" font-size="10.5" fill="#55534e" text-anchor="middle">bulk CSV</text>
+<rect x="368.08" y="259" width="31.84" height="17" rx="4" fill="#fcfcfb"/>
+<text x="384" y="272" font-size="10.5" fill="#55534e" text-anchor="middle">seed</text>
+<rect x="811.32" y="129.0" width="97.36" height="17" rx="4" fill="#fcfcfb"/>
+<text x="860.0" y="142.0" font-size="10.5" fill="#55534e" text-anchor="middle">Delta Sync (03c)</text>
+<rect x="968.16" y="461" width="53.68" height="17" rx="4" fill="#fcfcfb"/>
+<text x="995" y="474" font-size="10.5" fill="#55534e" text-anchor="middle">UC reads</text>
+<rect x="954.51" y="622.0" width="80.98" height="17" rx="4" fill="#fcfcfb"/>
+<text x="995.0" y="635.0" font-size="10.5" fill="#55534e" text-anchor="middle">Synced Tables</text>
+<rect x="1223.62" y="129.0" width="42.76" height="17" rx="4" fill="#fcfcfb"/>
+<text x="1245.0" y="142.0" font-size="10.5" fill="#55534e" text-anchor="middle">search</text>
+<rect x="1229.08" y="212.0" width="31.84" height="17" rx="4" fill="#fcfcfb"/>
+<text x="1245.0" y="225.0" font-size="10.5" fill="#55534e" text-anchor="middle">chat</text>
+<rect x="1231.81" y="377.0" width="26.38" height="17" rx="4" fill="#fcfcfb"/>
+<text x="1245.0" y="390.0" font-size="10.5" fill="#55534e" text-anchor="middle">SQL</text>
+<rect x="1229.08" y="599.0" width="31.84" height="17" rx="4" fill="#fcfcfb"/>
+<text x="1245.0" y="612.0" font-size="10.5" fill="#55534e" text-anchor="middle">OLTP</text>
+<rect x="1337.7" y="286" width="64.6" height="17" rx="4" fill="#fcfcfb"/>
+<text x="1370" y="299" font-size="10.5" fill="#55534e" text-anchor="middle">chat panel</text>
+<rect x="1071.32" y="751" width="97.36" height="17" rx="4" fill="#fcfcfb"/>
+<text x="1120" y="764" font-size="10.5" fill="#55534e" text-anchor="middle">Change Data Feed</text>
+</svg>

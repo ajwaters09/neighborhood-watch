@@ -1,0 +1,21 @@
+<dialog id="report-dialog" class="modal">
+  <article>
+    <header>
+      <button type="button" aria-label="Close" rel="prev" onclick="NW.closeReport()"></button>
+      <h3>Report a concern</h3>
+    </header>
+    <form id="report-form" hx-post="/report" hx-swap="none" hx-disabled-elt="find button">
+      <label>Community area
+        <select name="community_area" id="report-area" required>
+          <option value="" disabled>Choose an area…</option>{% for num, name in area_options %}<option value="{{ num }}">{{ name }}</option>{% endfor %}</select>
+      </label>
+      <label>What's going on?
+        <textarea name="description" rows="5" required placeholder="For example: three streetlights out on the 4800 block of W Chicago Ave since last week."></textarea>
+      </label>
+      <footer>
+        <button type="button" class="secondary outline" onclick="NW.closeReport()">Cancel</button>
+        <button type="submit">Submit report</button>
+      </footer>
+    </form>
+  </article>
+</dialog>

@@ -1,0 +1,1 @@
+<span id="alert-badge" class="badge"{% if oob %} hx-swap-oob="true"{% endif %}{% if not triggered_alerts %} hidden{% endif %}>{{ triggered_alerts|length }}</span>

@@ -1,0 +1,78 @@
+<header class="area-head">
+  <div>
+    <p class="eyebrow">{% if is_city %}Citywide · all 77 community areas{% else %}Community area {{ community_area }}{% endif %}</p>
+    <h2>{{ area_name }}</h2>
+  </div>
+  <div class="area-actions">
+    {% include "_subscribe_button.html" %}
+    <button type="button" class="secondary outline" onclick="NW.openReport()">Report a concern</button>
+  </div>
+</header>
+{# Where the area usually sits (crime per resident, rank of 77); filled by app.js (NW.renderLevel)
+   from /api/area-context once it loads. Below the header rather than beside the buttons, so each
+   rate line gets the panel's full width. #}
+<div class="usual-level" id="area-level"></div>
+
+{% if error %}
+  <p class="form-error">Couldn't load trends: {{ error }}</p>
+{% elif not metrics %}
+  <p class="muted">No trend data for this area yet.</p>
+{% else %}
+  <div id="detail-data" hidden data-metrics='{{ metrics_json }}' data-benchmarks='{{ benchmarks_json }}'
+       data-neighbors='{{ neighbors_json }}' data-sr='{{ sr_json }}' data-city="{{ 1 if is_city else 0 }}" data-window-days="{{ window_days }}"></div>
+
+  <div class="stat-grid">
+    <div class="stat stat-crime">
+      <label class="stat-label"><span class="dot dot-crime"></span>Crime
+        <select id="crime-metric-select" onchange="NW.onDetailMetricChange()">
+          {% for m in crime_metrics %}<option value="{{ m }}">{{ m|metric_label }}</option>{% endfor %}
+        </select>
+      </label>
+      <div class="stat-body" id="stat-crime"></div>
+    </div>
+    {# The 311 request types moving most. Filled by app.js (NW.render311). #}
+    <div class="stat stat-311">
+      <div class="stat-label"><span class="dot dot-311"></span>311 service requests</div>
+      <div class="stat-body" id="stat-311"></div>
+    </div>
+  </div>
+
+  {# Two views drawn by app.js: the crime-type table from data already on the page
+     (NW.renderTypeTable), and the rolling 12-month change from /api/area-rolling (NW.loadRolling). #}
+  <section class="panel-block">
+    <div class="chart-head chart-head-tight">
+      <div><h3>Crime by type</h3><div class="h3-sub">Last {{ window_days }} days</div></div>
+    </div>
+    <table class="type-table" id="type-table"></table>
+  </section>
+
+
+  <section class="panel-block">
+    <div class="chart-head">
+      <h3 id="roll-title">Rolling 12-month change</h3>
+      <span class="muted small" id="roll-latest"></span>
+    </div>
+    <div class="chart-box roll-box"><canvas id="roll-chart"></canvas><div class="chart-empty" id="roll-empty">Loading…</div></div>
+  </section>
+{% endif %}
+
+<div id="area-insight" hx-get="/area-insight?community_area={{ community_area }}&window_days={{ window_days }}" hx-trigger="load">
+  <div class="skeleton"><div class="sk sk-line"></div><div class="sk sk-line"></div><div class="sk sk-line"></div></div>
+</div>
+
+{# The expand chevron sits right after the title (styles.css), clear of the chat button in the
+   bottom-right corner. #}
+<details class="activity">
+  <summary>Underlying records</summary>
+  <div class="chart-head">
+    <span class="muted small">Individual crime and 311 reports behind the numbers</span>
+    <select id="days-select" name="days" aria-label="Days back"
+            hx-get="/area-activity" hx-trigger="change" hx-target="#recent-activity"
+            hx-vals='{"community_area": {{ community_area }}}'>
+      {% for d in (7, 14, 30, 60, 90) %}<option value="{{ d }}" {% if d == 30 %}selected{% endif %}>Last {{ d }} days</option>{% endfor %}
+    </select>
+  </div>
+  <div id="recent-activity" hx-get="/area-activity?community_area={{ community_area }}&days=30" hx-trigger="intersect once">
+    <div class="skeleton"><div class="sk sk-line"></div><div class="sk sk-line"></div><div class="sk sk-line"></div></div>
+  </div>
+</details>

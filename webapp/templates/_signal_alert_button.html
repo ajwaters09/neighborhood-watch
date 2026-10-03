@@ -1,0 +1,12 @@
+{# One-click alert rule from the Signals card. Expects: community_area, metric, kind ("trend" or
+   "threshold", see data_access.ALERT_KINDS), alert_pct, existing_rules, label, tip. #}
+{% if (kind ~ ":" ~ metric) in existing_rules %}
+  <span class="alert-set">✓ Alert set</span>
+{% else %}
+  <button type="button" class="alert-btn"
+          hx-post="/alert-rules"
+          hx-vals='{"community_area": {{ community_area }}, "metric": "{{ metric }}", "threshold_pct": {{ alert_pct }}, "kind": "{{ kind }}"}'
+          hx-target="#subscriptions-panel" hx-swap="outerHTML"
+          hx-on::after-request="if (event.detail.successful) this.outerHTML = '<span class=&quot;alert-set&quot;>✓ Alert set</span>'"
+          title="{{ tip }}. Manage it in My Areas.">🔔 {{ label }}</button>
+{% endif %}

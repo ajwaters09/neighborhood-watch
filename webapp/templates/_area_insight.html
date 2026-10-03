@@ -1,0 +1,174 @@
+{% from "_outlook_macros.html" import area_breakdown, city_breakdown %}
+<section class="insight-card">
+  <div class="chart-head"><h3>The week ahead</h3>
+    {% if outlook %}<span class="muted small" title="A forecast from notebook 08, using crime through {{ outlook.data_through }} and the weather forecast">Forecast · {{ outlook.week_start }} to {{ outlook.week_end }}</span>{% endif %}
+  </div>
+  {# Leads with the area's own recent run against its normal (the local signal an early warning
+     is about), then next week's forecast, broken down (_outlook_macros.html) into its Chicago-wide
+     part (weather, the city's recent run, holidays -- the same for every area) and this area's own
+     lean. #}
+  {% if lately and lately.normal_count >= small_baseline %}
+    {% set lp = lately.pct_vs_normal %}
+    <div class="outlook-row">
+      <span class="outlook-label">Lately</span>
+      <div>
+        <span class="outlook-badge {{ 'worse' if lp >= 5 else 'better' if lp <= -5 else 'flat' }}">{% if lp >= 5 %}▲ Running {{ "%.0f"|format(lp) }}% above normal{% elif lp <= -5 %}▼ Running {{ "%.0f"|format(-lp) }}% below normal{% else %}≈ Running about normal ({{ "%+.0f"|format(lp) }}%){% endif %}</span>
+        <div class="muted small">{{ "{:,}".format(lately.window_count) }} crimes in the last 30 days vs. ~{{ "{:,}".format(lately.normal_count|round|int) }} normal for this time of year</div>
+      </div>
+    </div>
+  {% endif %}
+  {% if outlook %}
+    {% set cw = outlook.citywide %}
+    <div class="outlook-row">
+      <span class="outlook-label">Next week</span>
+      <div>
+      {% if is_city %}
+        {% set cp = cw.pct_vs_normal %}
+        <div class="outlook-call {{ 'up' if cp >= 3 else 'down' if cp <= -3 else 'unclear' }}">
+          <span class="outlook-badge">{% if cp >= 3 %}▲ Likely above normal{% elif cp <= -3 %}▼ Likely below normal{% else %}≈ Close to normal{% endif %}</span>
+          <span class="muted small">citywide forecast {{ "%+.1f"|format(cp) }}% vs. normal</span>
+        </div>
+        {{ city_breakdown(outlook_drivers, cp) }}
+        <p class="outlook-numbers">{{ outlook.calls.up|length }} area{{ "s" if outlook.calls.up|length != 1 }} called above normal, {{ outlook.calls.down|length }} below; the rest too close to call.</p>
+      {% else %}
+        {% set a = outlook.area %}
+        <div class="outlook-call {{ a.call }}">
+          <span class="outlook-badge">{% if a.call == "up" %}▲ Likely above normal{% elif a.call == "down" %}▼ Likely below normal{% else %}≈ Too close to call{% endif %}</span>
+          <span class="muted small">{{ (a.p_above_normal * 100)|round|int }}% chance of coming in above normal</span>
+        </div>
+        <p class="outlook-numbers">About <strong>{{ a.forecast|round|int }}</strong> crimes forecast, vs. <strong>{{ a.normal|round|int }}</strong> in a normal week ({{ "%+.0f"|format(a.pct_vs_normal) }}%).</p>
+        {{ area_breakdown(area_name, a, outlook_drivers) }}
+      {% endif %}
+      </div>
+    </div>
+  {% else %}
+    <p class="muted small">No outlook yet{% if outlook_error %} ({{ outlook_error }}){% endif %}.</p>
+  {% endif %}
+</section>
+
+{# Events that could bring crime with them, biggest expected effect first. Each row carries an
+   impact chip from its expected extra incidents on the surrounding blocks (notebook 08b), and the
+   biggest one, if it's likely to add at least one incident, gets a ⚠ as the one to watch. #}
+{% macro impact(extra) -%}
+  {%- if extra >= 2 %}<span class="impact-chip high" title="Expected extra incidents on the surrounding blocks while it's on">Likely to add crime</span>
+  {%- elif extra >= 0.5 %}<span class="impact-chip mid" title="Expected extra incidents on the surrounding blocks while it's on">May add a little</span>
+  {%- else %}<span class="impact-chip low" title="Expected extra incidents on the surrounding blocks while it's on">Little effect</span>{% endif -%}
+{%- endmacro %}
+{% macro area_link(item) -%}
+  {%- if is_city and item.community_area %} · <a href="#" onclick="NW.jumpToArea({{ item.community_area }}); return false;">{{ item.area_name }}</a>{% endif -%}
+{%- endmacro %}
+<section class="insight-card">
+  <div class="chart-head"><h3>Upcoming events</h3>
+    {% if events %}<span class="muted small">Next 30 days{{ " · citywide" if is_city }}</span>{% endif %}
+  </div>
+  {% if events_error %}
+    <p class="muted small">Events unavailable ({{ events_error }}).</p>
+  {% elif events and (events.festivals or events.club_nights or events.multi_week_unscored) %}
+    <ul class="signal-list event-list">
+    {% for f in events.festivals %}
+      {% set watch = loop.first and f.extra_crimes >= 1 %}
+      <li>
+        <span class="event-when">{{ f.start_date|short_date }}{% if f.end_date != f.start_date %}–{{ f.end_date|short_date }}{% endif %}</span>
+        <div class="signal-body">
+          {% if watch %}<span class="event-watch-icon" title="One to watch: the event here most likely to bring extra crime">⚠</span> {% endif %}<strong>{{ f.name }}</strong> <span class="muted small">{{ (f.place or "")|title }}{{ area_link(f) }}</span>
+          <div class="muted small"{% if f.past_editions %} title="While it was on in past years, crime on the surrounding blocks ran {{ '%+.0f'|format((f.ratio - 1) * 100) }}% above a comparable day"{% endif %}>
+            Street festival ·
+            {% if f.extra_crimes >= 0.1 %}about {{ "%.1f"|format(f.extra_crimes) }} extra incidents nearby{% else %}no measurable extra expected{% endif %},
+            {% if f.past_editions %}based on previous years of this event{% else %}based on similar festivals{% endif %}
+          </div>
+        </div>
+        {{ impact(f.extra_crimes or 0) }}
+      </li>
+    {% endfor %}
+    {% for c in events.club_nights %}
+      <li>
+        <span class="event-when">{{ c.next_date|short_date }}</span>
+        <div class="signal-body">
+          <strong>{{ c.place }}</strong> <span class="muted small">{{ c.nights }} show{{ "s" if c.nights != 1 }}{{ area_link(c) }}</span>
+          <div class="muted small">
+            Music club · {% if c.next_acts %}next: {{ c.next_acts[0] }} · {% endif %}{% if c.extra_crimes >= 0.1 %}about {{ "%.1f"|format(c.extra_crimes) }} extra incidents nearby across them{% else %}no measurable extra expected{% endif %}, based on previous shows
+          </div>
+        </div>
+        {{ impact(c.extra_crimes or 0) }}
+      </li>
+    {% endfor %}
+    </ul>
+    {% if events.multi_week_unscored %}<p class="muted small">Also running: {% for m in events.multi_week_unscored %}{{ m.name }} ({{ m.start_date|short_date }}–{{ m.end_date|short_date }}){% if not loop.last %}, {% endif %}{% endfor %}. Season-long, so not scored.</p>{% endif %}
+  {% else %}
+    <p class="muted small">Nothing on the calendar {{ "citywide" if is_city else "here" }} in the next 30 days (street festivals from filed permits, shows at 20 small clubs).</p>
+  {% endif %}
+</section>
+
+{% if not is_city %}
+<section class="insight-card">
+  <div class="chart-head"><h3>What's happening here</h3>
+    {% if summary %}<span class="muted small" title="Written nightly from this area's data by {{ summary.model }}">AI summary · data through {{ summary.as_of_date }}</span>{% endif %}
+  </div>
+  {% if summary %}
+    <p class="narrative">{{ summary.narrative }}</p>
+    {% set ctx = summary.context or {} %}
+    {% if ctx.top_crime_blocks or ctx.top_311_types %}
+    <div class="fact-chips">
+      {% for b in (ctx.top_crime_blocks or [])[:2] %}<span class="fact-chip" title="Crimes reported on this block, last 30 days">📍 {{ b.block|title }} · {{ b.count }}</span>{% endfor %}
+      {% for t in (ctx.top_311_types or [])[:2] %}<span class="fact-chip" title="311 requests of this type, last 30 days">🛠 {{ t.sr_type }} · {{ t.count }}</span>{% endfor %}
+    </div>
+    {% endif %}
+  {% else %}
+    <p class="muted small">No summary yet for this area{% if summary_error %} ({{ summary_error }}){% endif %}.</p>
+  {% endif %}
+</section>
+
+<section class="insight-card">
+  <div class="chart-head"><h3>Signals to watch</h3>
+    <a href="#" class="small" onclick="window.dispatchEvent(new CustomEvent('nw-view', { detail: 'insights' })); return false;">How is this measured?</a>
+  </div>
+  {% if signals_error %}
+    <p class="muted small">Leading-indicator analysis unavailable ({{ signals_error }}).</p>
+  {% else %}
+    {% if watch %}
+    <ul class="signal-list">
+    {% for w in watch %}
+      <li>
+        <span class="signal-up">▲ {{ "%+.0f"|format(w.pct_change) }}%</span>
+        <div class="signal-body">
+          <strong>{{ w.sr_metric|metric_label }}</strong> requests ({{ w.prior_window_count }} → {{ w.window_count }})
+          <div class="muted small">
+            Historically followed by more
+            {% for l in w.leads[:3] %}<strong>{{ l.crime_metric|crime_phrase }}</strong> ~{{ l.lag_months }} mo later (r={{ "%.2f"|format(l.r) }}){% if not loop.last %}, {% endif %}{% endfor %}.
+          </div>
+          {# The alert tracks the leading indicator (the 311 type), not the crime it
+             precedes -- the point is to hear about the early signal, not the
+             crime rise it may lead to. A trend rule: an update in My Areas every
+             time new data comes in, whatever it shows (still climbing, holding
+             steady, or easing). #}
+          {% with metric=w.sr_metric, kind="trend", label="Alert me on this trend", tip="Get an update in My Areas every time new 311 data comes in: whether " ~ (w.sr_metric|metric_label|lower) ~ " requests are still climbing, holding steady, or easing" %}{% include "_signal_alert_button.html" %}{% endwith %}
+        </div>
+      </li>
+    {% endfor %}
+    </ul>
+    {% else %}
+    <p class="muted small">Nothing firing right now: no 311 request type that has historically come before a crime increase is up {{ alert_pct|int }}%+ here in the last {{ window_days }} days.</p>
+    {% endif %}
+
+    {% if near %}
+    <div class="near-head">Approaching threshold</div>
+    <ul class="signal-list near">
+    {% for w in near %}
+      {% set top = w.leads[0] if w.leads else none %}
+      <li>
+        <span class="signal-near">▲ {{ "%+.0f"|format(w.pct_change) }}%</span>
+        <div class="signal-body">
+          {% set gap = alert_pct - w.pct_change %}
+          <strong>{{ w.sr_metric|metric_label }}</strong> requests ({{ w.prior_window_count }} → {{ w.window_count }}),
+          {% if gap < 1 %}just under the +{{ alert_pct|int }}% signal line{% else %}{{ gap|round|int }} points short of a signal{% endif %}
+          {% if top %}<div class="muted small">Would point to <strong>{{ top.crime_metric|crime_phrase }}</strong> ~{{ top.lag_months }} mo later (r={{ "%.2f"|format(top.r) }}).</div>{% endif %}
+          {% with metric=w.sr_metric, kind="threshold", label="Alert me if it crosses +" ~ alert_pct|int ~ "%", tip="Flags this in My Areas if a later 311 data pull has it up " ~ alert_pct|int ~ "% or more" %}{% include "_signal_alert_button.html" %}{% endwith %}
+        </div>
+      </li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+
+  {% endif %}
+</section>
+{% endif %}

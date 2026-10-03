@@ -1,0 +1,13 @@
+<div class="toasts" aria-live="polite"
+     x-data="{ items: [], n: 0,
+               push(t) { const id = ++this.n; this.items.push({ id, ...t }); setTimeout(() => this.drop(id), t.kind === 'error' ? 7000 : 4000); },
+               drop(id) { this.items = this.items.filter(i => i.id !== id); } }"
+     @toast.window="push($event.detail)">
+  <template x-for="t in items" :key="t.id">
+    <div class="toast" :class="'toast-' + (t.kind || 'info')" x-transition.opacity>
+      <span class="toast-icon" x-text="t.kind === 'success' ? '✓' : (t.kind === 'error' ? '!' : 'i')"></span>
+      <span class="toast-msg" x-text="t.message"></span>
+      <button type="button" class="icon-btn" aria-label="Dismiss" @click="drop(t.id)">✕</button>
+    </div>
+  </template>
+</div>

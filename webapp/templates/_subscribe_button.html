@@ -1,0 +1,13 @@
+<div id="subscribe-slot"{% if oob %} hx-swap-oob="true"{% endif %}>
+{% if community_area == 0 %}
+  {# All of Chicago: subscriptions are per area, so the button shows but does nothing. #}
+  <button type="button" class="btn-disabled" disabled title="Pick a community area to subscribe to it">＋ Subscribe</button>
+{% elif subscribed %}
+  <button type="button" class="btn-subscribed" disabled>✓ Subscribed</button>
+{% else %}
+  <form hx-post="/subscribe" hx-swap="none" hx-disabled-elt="find button">
+    <input type="hidden" name="community_area" value="{{ community_area }}">
+    <button type="submit">＋ Subscribe</button>
+  </form>
+{% endif %}
+</div>

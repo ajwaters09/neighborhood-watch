@@ -1,0 +1,35 @@
+<div class="chat-dock" :class="{ open: chatOpen }">
+  <section class="chat-panel" x-show="chatOpen" x-cloak x-transition.origin.bottom.right aria-label="Agent chat">
+    <header class="chat-header">
+      <div>
+        <strong>Ask the agent</strong>
+        <div class="muted small">Look up trends, subscribe, or file a report · <code>{{ serving_endpoint }}</code></div>
+      </div>
+      <div class="chat-header-actions">
+        <button type="button" class="icon-btn" aria-label="Minimize chat" title="Minimize" @click="chatOpen = false">–</button>
+      </div>
+    </header>
+    <div id="chat-log">
+      {% if not chat_messages %}
+      <div class="chat-empty muted">Try: “How is crime trending in the area I'm looking at?” or “Subscribe me to Logan Square.”</div>
+      {% endif %}
+      {% for m in chat_messages %}
+        {# As in _chat_turn.html: an assistant message that also called tools isn't the answer. #}
+        {% if m.role in ('user', 'assistant') and m.content and not m.tool_calls %}
+        {% if m.role == 'assistant' %}<div class="chat-bubble assistant md">{{ m.content|markdown }}</div>{% else %}<div class="chat-bubble user">{{ m.content }}</div>{% endif %}
+        {% endif %}
+      {% endfor %}
+    </div>
+    <form id="chat-form" hx-post="/chat" hx-target="#chat-log" hx-swap="beforeend"
+          hx-vals='js:{active_area: NW.activeArea}'
+          hx-on::before-request="NW.chatSending(this)"
+          hx-on::after-request="NW.chatDone(this)">
+      <input type="text" name="message" id="chat-input" autocomplete="off" required placeholder="{{ '' if chat_messages else 'Ask about this area…' }}">
+      <button type="submit" aria-label="Send">➤</button>
+    </form>
+  </section>
+  <button type="button" class="chat-fab" :aria-expanded="chatOpen" :aria-label="chatOpen ? 'Minimize agent chat' : 'Open agent chat'"
+          @click="chatOpen = !chatOpen; if (chatOpen) $nextTick(() => { NW.scrollChat(); document.getElementById('chat-input').focus(); })">
+    <span x-show="!chatOpen">💬</span><span x-show="chatOpen" x-cloak aria-hidden="true">–</span>
+  </button>
+</div>

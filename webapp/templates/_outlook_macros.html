@@ -1,0 +1,48 @@
+{# The next-week forecast's breakdown, shared by the area panel's "The week ahead" card and the
+   Insights page. Rows are main.outlook_drivers' {label, detail, pct}; a positive % means more crime
+   than a normal week. #}
+
+{% macro pct_cell(pct, strong=false) -%}
+  <span class="drv-pct {{ 'worse' if pct >= 0.5 else 'better' if pct <= -0.5 else '' }}">{% if strong %}<strong>{% endif %}{{ "%+.1f"|format(pct) }}%{% if strong %}</strong>{% endif %}</span>
+{%- endmacro %}
+
+{% macro driver_rows(drivers, sub=false) %}
+  {% for d in drivers %}
+  <div class="drv-row{{ ' drv-sub' if sub }}">
+    <div class="drv-text"><span class="drv-label">{{ d.label }}</span><span class="drv-detail">{{ d.detail }}</span></div>
+    {{ pct_cell(d.pct) }}
+  </div>
+  {% endfor %}
+{% endmacro %}
+
+{# All of Chicago: the citywide drivers, then the net. #}
+{% macro city_breakdown(drivers, net_pct) %}
+<div class="drivers">
+  {% if drivers %}{{ driver_rows(drivers) }}{% else %}
+  <div class="drv-row"><div class="drv-text"><span class="drv-detail">Nothing is pushing the city away from a normal week.</span></div></div>
+  {% endif %}
+  <div class="drv-row drv-net"><div class="drv-text"><span class="drv-label">Citywide forecast vs. a normal week</span></div>{{ pct_cell(net_pct, true) }}</div>
+</div>
+{% endmacro %}
+
+{# One area: the Chicago-wide conditions (with their drivers under them), the area's own lean, and
+   what the two come to together. #}
+{% macro area_breakdown(area_name, a, drivers) %}
+{% set lp = a.local_part_pct %}
+<div class="drivers">
+  <div class="drv-row drv-group">
+    <div class="drv-text"><span class="drv-label">Chicago-wide conditions</span><span class="drv-detail">The same adjustment applies to every area this week.</span></div>
+    {{ pct_cell(a.citywide_part_pct) }}
+  </div>
+  {{ driver_rows(drivers, sub=true) }}
+  <div class="drv-row drv-group">
+    <div class="drv-text"><span class="drv-label">{{ area_name }}'s own trend</span><span class="drv-detail">
+      {%- if lp >= 0.5 %}Crime here has been running hotter than in the rest of the city lately, and part of that is expected to continue next week.
+      {%- elif lp <= -0.5 %}Crime here has been running quieter than in the rest of the city lately, and part of that is expected to continue next week.
+      {%- else %}Crime here has been tracking the rest of the city, so no adjustment.{% endif -%}
+    </span></div>
+    {{ pct_cell(lp) }}
+  </div>
+  <div class="drv-row drv-net"><div class="drv-text"><span class="drv-label">Together, vs. a normal week</span></div>{{ pct_cell(a.pct_vs_normal, true) }}</div>
+</div>
+{% endmacro %}

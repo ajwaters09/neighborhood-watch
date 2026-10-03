@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+{% include "_head.html" %}
+<title>Neighborhood Watch</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+{# MapLibre GL + its Leaflet bridge: renders OpenFreeMap's vector basemaps as Leaflet layers.
+   Pinned to 5.x -- 6.x ships ES modules only, and the bridge needs the global `maplibregl`. #}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/maplibre-gl.css">
+<script src="https://cdn.jsdelivr.net/npm/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@maplibre/maplibre-gl-leaflet@0.1.4/leaflet-maplibre-gl.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<script defer src="https://unpkg.com/alpinejs@3.14.1/dist/cdn.min.js"></script>
+</head>
+<body x-data="{ view: 'explore', chatOpen: false }" @nw-view.window="view = $event.detail">
+<div id="progress-bar" aria-hidden="true"></div>
+
+<header class="topbar">
+  <div class="brand"><span class="brand-mark" aria-hidden="true"></span>Neighborhood Watch</div>
+  <nav class="views" role="tablist">
+    <button type="button" role="tab" :aria-selected="view === 'explore'" :class="{ on: view === 'explore' }" @click="view = 'explore'; $nextTick(() => NW.map && NW.map.invalidateSize())">Explore</button>
+    <button type="button" role="tab" :aria-selected="view === 'areas'" :class="{ on: view === 'areas' }" @click="view = 'areas'">My Areas {% include "_alert_badge.html" %}</button>
+    <button type="button" role="tab" :aria-selected="view === 'insights'" :class="{ on: view === 'insights' }" @click="view = 'insights'">Insights</button>
+  </nav>
+  <div class="user-menu">
+    <span class="avatar" aria-hidden="true">{{ (user.display_name or user.email)[:1]|upper }}</span>
+    <span class="user-name">{{ user.display_name or user.email }}</span>
+    <button type="button" class="link-btn" hx-post="/logout">Log out</button>
+  </div>
+</header>
+
+<script id="nw-config" type="application/json">{{ {"crime_metrics": crime_metrics, "default_area": default_area, "small_baseline": small_baseline}|tojson }}</script>
+
+<main class="page">
+  <div class="explore" x-show="view === 'explore'">
+    <section class="card map-card">
+      <div class="toolbar">
+        <label class="field">Crime type
+          <select id="metric-select" onchange="NW.onMetricChange()"></select>
+        </label>
+        {# Drives the Trend Map and the area panel's numbers. #}
+        <label class="field">Period
+          <select id="window-select" name="window_days" onchange="NW.updateLegend(); NW.updateMap()">
+            {% for d in window_days_options %}<option value="{{ d }}" {% if d == 30 %}selected{% endif %}>Last {{ d }} days</option>{% endfor %}
+          </select>
+        </label>
+        <label class="field">Area
+          <select id="area-select" name="community_area" onchange="NW.selectArea(this.value, { source: 'dropdown' })">
+            <option value="0" {% if default_area == 0 %}selected{% endif %}>{{ city_name }}</option>
+            <optgroup label="Community areas">
+            {% for num, name in area_options %}<option value="{{ num }}" {% if num == default_area %}selected{% endif %}>{{ name }}</option>{% endfor %}
+            </optgroup>
+          </select>
+        </label>
+      </div>
+      {# The three map layers, right above the map: where crime is improving or worsening against each
+         area's normal (the default), next week's outlook, and where it's high or low for the population.
+         Each button's hover tooltip (data-tip, set by NW.updateLegend) says what it shows and what the
+         colors mean. #}
+      <div class="map-modes">
+        <div class="segmented" role="group" aria-label="Map layer">
+          <button type="button" class="on" data-mode="normal" onclick="NW.setMode('normal')">Trend Map</button>
+          <button type="button" data-mode="forecast" onclick="NW.setMode('forecast')">Outlook</button>
+          <button type="button" data-mode="level" onclick="NW.setMode('level')">Crime per capita</button>
+        </div>
+      </div>
+      {% if metrics_error %}<p class="form-error">Couldn't load metrics: {{ metrics_error }}</p>{% endif %}
+      <div class="map-wrap">
+        <div id="map" data-geojson-url="/static/data/community_areas.geojson" data-city-url="/static/data/city_boundary.geojson"></div>
+        <div class="map-loading" id="map-loading" hidden><span class="spinner"></span></div>
+      </div>
+      <div class="map-footer">
+        <label class="field field-range">Area shading
+          <input type="range" id="opacity-range" min="0" max="0.8" step="0.05" value="0.6" oninput="NW.setOpacity(this.value)">
+        </label>
+      </div>
+    </section>
+
+    <aside class="card area-panel">
+      <div id="area-detail"
+           hx-get="/area-detail"
+           hx-trigger="area-changed, change from:#window-select"
+           hx-include="#area-select,#window-select"
+           hx-disinherit="*"
+           hx-swap="innerHTML">
+        {% include "_skeleton.html" %}
+      </div>
+    </aside>
+  </div>
+
+  <div x-show="view === 'areas'" x-cloak>
+    {% include "_subscriptions.html" %}
+  </div>
+
+  <div x-show="view === 'insights'" x-cloak>
+    {# Loaded the first time the view is opened: it reads a UC table via the SQL warehouse. #}
+    <div id="insights-view" hx-get="/insights" hx-trigger="intersect once">
+      <div class="card"><div class="skeleton"><div class="sk sk-title"></div><div class="sk sk-chart"></div></div></div>
+    </div>
+  </div>
+</main>
+
+{% include "_report.html" %}
+{% include "_chat.html" %}
+{% include "_toasts.html" %}
+
+<script src="/static/app.js?v={{ static_version() }}"></script>
+</body>
+</html>
